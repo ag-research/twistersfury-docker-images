@@ -1,7 +1,7 @@
 image: docker:latest
 
 variables:
-    DOCKER_IMAGES: $CI_REGISTRY
+    DOCKER_IMAGES: $CI_REGISTRY/twistersfury
 
 services:
   - docker:dind
