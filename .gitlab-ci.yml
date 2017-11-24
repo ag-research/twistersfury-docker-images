@@ -29,6 +29,7 @@ release:phalcon:latest:
     stage: release
     script:
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+        - docker pull $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
         - docker tag $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME $DOCKER_IMAGES/phalcon:latest
         - docker push $DOCKER_IMAGES/phalcon:latest
     only:
