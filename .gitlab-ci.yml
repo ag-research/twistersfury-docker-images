@@ -39,6 +39,7 @@ deploy:phalcon:latest:
     stage: deploy
     script:
         - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+        - docker pull $DOCKER_IMAGES/phalcon:latest
         - docker tag $DOCKER_IMAGES/phalcon:latest twistersfury/phalcon:latest
         - docker push twistersfury/phalcon:latest
     only:
