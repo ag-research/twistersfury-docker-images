@@ -1,0 +1,42 @@
+variables:
+    DOCKER_IMAGES: $CI_REGISTRY
+
+services:
+  - docker:dind
+
+stages:
+    - build
+    - test
+    - release
+    - deploy
+
+build:phalcon:latest:
+    stage: build
+    script:
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN gitlab.com
+        - docker build -t $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME ./phalcon
+        - docker push $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
+
+test:phalcon:latest:
+    image: $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
+    stage: test
+    script:
+        - php -m | grep phalcon
+
+release:phalcon:latest:
+    stage: release
+    script:
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN gitlab.com
+        - docker tag $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME $DOCKER_IMAGES/phalcon:latest
+        - docker push $DOCKER_IMAGES/phalcon:latest
+    only:
+        - master
+
+deploy:phalcon:latest:
+    stage: deploy
+    script:
+        - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+        - docker tag $DOCKER_IMAGES/phalcon:latest twistersfury/phalcon:latest
+        - docker push twistersfury/phalcon:latest
+    only:
+        - master
