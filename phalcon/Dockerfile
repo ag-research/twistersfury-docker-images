@@ -49,7 +49,8 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && docker-php-ext-enable phalcon
 
 # Post Install Clean Up
-RUN rm -rf $COMPOSER_DIR/composer \
+RUN composer clear-cache \
+    && rm -rf $COMPOSER_DIR/composer \
     && apt-get remove -y \
         automake \
         git \
