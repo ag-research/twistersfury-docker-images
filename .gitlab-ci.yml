@@ -13,7 +13,7 @@ stages:
 build:phalcon:latest:
     stage: build
     script:
-        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN gitlab.com
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
         - docker build -t $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME ./phalcon
         - docker push $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
 
@@ -26,7 +26,7 @@ test:phalcon:latest:
 release:phalcon:latest:
     stage: release
     script:
-        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN gitlab.com
+        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
         - docker tag $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME $DOCKER_IMAGES/phalcon:latest
         - docker push $DOCKER_IMAGES/phalcon:latest
     only:
