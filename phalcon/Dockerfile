@@ -21,7 +21,10 @@ RUN curl -fsSL https://github.com/skvadrik/re2c/archive/master.tar.gz | tar zx \
     && ./configure \
     && make \
     && make install \
-    && make bootstrap
+    && make bootstrap \
+    && make clean \
+    && cd ../../ \
+    && rm -rf re2c-master
 
 # Install Phalcon Zephir Parser
 RUN curl -fsSL https://github.com/phalcon/php-zephir-parser/archive/$PARSER_BRANCH.tar.gz | tar xz \
