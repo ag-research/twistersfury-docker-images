@@ -41,6 +41,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
     && cd cphalcon-master \
     && composer install \
+    && composer clear-cache \
     && ./vendor/bin/zephir build --buildEngine=ZendEngine3 \
     && cd build \
     && ./install \
@@ -49,8 +50,7 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && docker-php-ext-enable phalcon
 
 # Post Install Clean Up
-RUN composer clear-cache \
-    && rm -rf $COMPOSER_DIR/composer \
+RUN rm -rf $COMPOSER_DIR/composer \
     && apt-get remove -y \
         automake \
         git \
