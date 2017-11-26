@@ -1,8 +1,5 @@
 image: docker:latest
 
-variables:
-    DOCKER_IMAGES: $CI_REGISTRY_IMAGE
-
 services:
   - docker:dind
 
@@ -15,12 +12,12 @@ stages:
 build:phalcon:latest:
     stage: build
     script:
+        - docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-        - docker build -t $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME ./phalcon
-        - docker push $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
+        - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
 
 test:phalcon:latest:
-    image: $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
+    image: $GITLAB_IMAGES/phalcon:$CI_BUILD_REF_NAME
     stage: test
     script:
         - php -m | grep phalcon
@@ -28,21 +25,19 @@ test:phalcon:latest:
 release:phalcon:latest:
     stage: release
     script:
+        - docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $GITLAB_IMAGES/phalcon:latest
         - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-        - docker pull $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME
-        - docker tag $DOCKER_IMAGES/phalcon:$CI_BUILD_REF_NAME $DOCKER_IMAGES/phalcon:latest
-        - docker push $DOCKER_IMAGES/phalcon:latest
+        - docker push $CI_REGISTRY_IMAGE/phalcon:latest
     only:
         - master
 
 deploy:phalcon:latest:
     stage: deploy
     script:
-        - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
-        - docker pull $DOCKER_IMAGES/phalcon:latest
-        - docker tag $DOCKER_IMAGES/phalcon:latest twistersfury/phalcon:latest
-        - docker logout $CI_REGISTRY
-        - docker login -u $DOCKER_USER -p $DOCKER_PASSWORD $DOCKER_REGISTRY
+        - docker pull $CI_REGISTRY_IMAGE/phalcon:latest
+        - docker tag $CI_REGISTRY_IMAGE/phalcon:latest twistersfury/phalcon:latest
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon:latest
     only:
         - master

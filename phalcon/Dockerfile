@@ -48,7 +48,7 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && ./vendor/bin/zephir build --buildEngine=ZendEngine3 \
     && cd build \
     && ./install \
-    && cd ../ \
+    && cd ../../ \
     && rm -rf cphalcon-master \
     && docker-php-ext-enable phalcon
 
