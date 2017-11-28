@@ -17,7 +17,7 @@ build:phalcon:latest:
         - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
 
 test:phalcon:latest:
-    image: $GITLAB_IMAGES/phalcon:$CI_BUILD_REF_NAME
+    image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
     stage: test
     script:
         - php -m | grep phalcon
