@@ -44,20 +44,20 @@ deploy:phalcon:latest:
         - master
 
 #XDebug Phalcon
-build:phalcon:latest:
+build:phalcon:xdebug:
     stage: build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon/xdebug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
 
-test:phalcon:latest:
+test:phalcon:xdebug:
     image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
     stage: test
     script:
         - php -m | grep phalcon
 
-release:phalcon:latest:
+release:phalcon:xdebug:
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
@@ -67,7 +67,7 @@ release:phalcon:latest:
     only:
         - master
 
-deploy:phalcon:latest:
+deploy:phalcon:xdebug:
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon:xdebug
