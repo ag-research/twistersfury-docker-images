@@ -37,8 +37,8 @@ release:phalcon:latest:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon:$PHALCON_TAG
         - docker push $CI_REGISTRY_IMAGE/phalcon:latest
-    only:
-        - master
+#    only:
+#        - master
 
 deploy:phalcon:latest:
     stage: deploy
@@ -50,8 +50,8 @@ deploy:phalcon:latest:
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon:$PHALCON_TAG
         - docker push twistersfury/phalcon:latest
-    only:
-        - master
+#    only:
+#        - master
 
 #XDebug Phalcon
 build:phalcon:xdebug:
@@ -77,8 +77,8 @@ release:phalcon:xdebug:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon:xdebug-$PHALCON_TAG
         - docker push $CI_REGISTRY_IMAGE/phalcon:xdebug
-    only:
-        - master
+#    only:
+#        - master
 
 deploy:phalcon:xdebug:
     stage: secondary-deploy
@@ -89,6 +89,6 @@ deploy:phalcon:xdebug:
         - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME twistersfury/phalcon:xdebug-$PHALCON_TAG
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon:xdebug-$PHALCON_TAG
-        - docker push twistersfury/phalcon:xdebug
-    only:
-        - master
+#        - docker push twistersfury/phalcon:xdebug
+#    only:
+#        - master
