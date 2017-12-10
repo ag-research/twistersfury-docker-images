@@ -8,6 +8,10 @@ stages:
     - test
     - release
     - deploy
+    - secondary-build
+    - secondary-test
+    - secondary-release
+    - secondary-deploy
 
 # Latest Phalcon
 build:phalcon:latest:
@@ -45,7 +49,7 @@ deploy:phalcon:latest:
 
 #XDebug Phalcon
 build:phalcon:xdebug:
-    stage: build
+    stage: secondary-build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon/xdebug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -53,25 +57,25 @@ build:phalcon:xdebug:
 
 test:phalcon:xdebug:
     image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
-    stage: test
+    stage: secondary-test
     script:
-        - php -m | grep phalcon
+        - php -m | grep xdebug
 
 release:phalcon:xdebug:
-    stage: release
+    stage: secondary-release
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug
+        - docker tag $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon:xdebug
     only:
         - master
 
 deploy:phalcon:xdebug:
-    stage: deploy
+    stage: secondary-deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon:xdebug
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:latest twistersfury/phalcon:xdebug
+        - docker tag $CI_REGISTRY_IMAGE/phalcon:xdebug twistersfury/phalcon:xdebug
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon:xdebug
     only:
