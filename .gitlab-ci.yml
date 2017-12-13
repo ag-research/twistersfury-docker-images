@@ -17,7 +17,7 @@ stages:
 build:php:fpm-7.1-debug:
     stage: build
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./phalcon/latest
+        - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
 
