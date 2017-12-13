@@ -25,7 +25,7 @@ test:php:fpm-7.1-debug:
     image: $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
     stage: test
     script:
-        - php -i | grep "--enable-debug"
+        - php -i | grep "enable-debug"
 
 release:php:fpm-7.1-debug:
     stage: release
