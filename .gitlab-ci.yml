@@ -14,7 +14,7 @@ stages:
     - secondary-deploy
 
 #PHP Debug
-build:php:fpm-7.1-debug
+build:php:fpm-7.1-debug:
     stage: build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./phalcon/latest
