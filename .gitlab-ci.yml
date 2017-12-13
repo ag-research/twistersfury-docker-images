@@ -13,6 +13,40 @@ stages:
     - secondary-release
     - secondary-deploy
 
+#PHP Debug
+build:php:fpm-7.1-debug
+    stage: build
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./phalcon/latest
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+
+test:php:fpm-7.1-debug:
+    image: $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+    stage: test
+    script:
+        - php -i | grep --enable-debug
+
+release:php:fpm-7.1-debug:
+    stage: release
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
+    only:
+        - master
+
+deploy:php:fpm-7.1-debug:
+    stage: deploy
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push twistersfury/php:fpm-7.1-debug
+    only:
+        - master
+
 # Latest Phalcon
 build:phalcon:latest:
     stage: build

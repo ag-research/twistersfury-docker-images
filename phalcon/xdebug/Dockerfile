@@ -1,4 +1,4 @@
-FROM twistersfury/phalcon
+FROM twistersfury/php:fpm-7.1-debug
 
 ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --enable-debug
 
