@@ -42,7 +42,7 @@ deploy:php:fpm-7.1-debug:
     script:
         - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/php:fpm-7.1-debug
     only:
         - master
