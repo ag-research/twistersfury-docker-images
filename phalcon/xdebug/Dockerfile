@@ -1,10 +1,4 @@
-FROM twistersfury/phalcon:latest
-
 FROM twistersfury/php:fpm-7.1-debug
-
-COPY --from=0 /usr/local/lib/php/extensions/no-debug-non-zts-20160303/phalcon.so /usr/local/lib/php/extensions/debug-non-zts-20160303
-
-ENV PHP_EXTRA_CONFIGURE_ARGS --enable-fpm --with-fpm-user=www-data --with-fpm-group=www-data --enable-debug
 
 RUN apt-get update && apt-get -y install \
         gdb-minimal \
@@ -16,3 +10,15 @@ RUN pecl install \
         phalcon \
         xdebug \
     && rm -rf /tmp/pear
+
+#Configs For Versions
+ENV PHALCON_BRANCH master
+
+#Installing Phalcon
+RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
+    && cd cphalcon-$PHALCON_BRANCH \
+    && cd build \
+    && ./install \
+    && cd ../../ \
+    && docker-php-ext-enable phalcon \
+    && rm -rf cphalcon-$PHALCON_BRANCH
