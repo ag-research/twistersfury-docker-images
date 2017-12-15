@@ -7,7 +7,6 @@ RUN apt-get update && apt-get -y install \
 RUN pecl install \
         xdebug \
     && docker-php-ext-enable \
-        phalcon \
         xdebug \
     && rm -rf /tmp/pear
 
