@@ -88,20 +88,20 @@ deploy:phalcon:latest:
         - master
 
 #Docker
-build:phalcon:latest:
+build:docker:latest:
     stage: build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
 
-test:phalcon:latest:
+test:docker:latest:
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     stage: test
     script:
         - wget -O - twistersfury.com
 
-release:phalcon:latest:
+release:docker:latest:
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
@@ -111,7 +111,7 @@ release:phalcon:latest:
     only:
         - master
 
-deploy:phalcon:latest:
+deploy:docker:latest:
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/docker:latest
