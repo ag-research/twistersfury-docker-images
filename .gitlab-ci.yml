@@ -28,6 +28,9 @@ test:nginx:
     services:
         - name: $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
           alias: nginx.test
+    variables:
+        ENV_DOMAIN_NAME: nginx.test
+        ENV_UPSTREAM_HOST: 127.0.0.1:8000
     script:
         - wget -sO - http://nginx.test/.well-known/ci.log
 
@@ -146,7 +149,7 @@ test:docker:latest:
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     stage: test
     script:
-        - wget -O - twistersfury.com
+        - which wget
 
 release:docker:latest:
     tags: ["docker"]
