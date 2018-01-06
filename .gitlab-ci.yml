@@ -13,8 +13,49 @@ stages:
     - secondary-release
     - secondary-deploy
 
+#Nginx w/SSL
+build:nginx:
+    tags: ["docker"]
+    stage: build
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
+
+test:nginx:
+    stage: test
+    image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
+    services:
+        - name: $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
+          alias: nginx.test
+    script:
+        - wget -sO - http://nginx.test/.well-known/ci.log
+
+release:nginx:
+    tags: ["docker"]
+    stage: release
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/nginx:latest
+    only:
+        - master
+
+deploy:nginx:
+    tags: ["docker"]
+    stage: deploy
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/nginx:latest
+        - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - docker push twistersfury/nginx:latest
+    only:
+        - master
+
 #PHP Debug
 build:php:fpm-7.1-debug:
+    tags: ["docker"]
     stage: build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
@@ -28,6 +69,7 @@ test:php:fpm-7.1-debug:
         - php -i | grep "enable-debug"
 
 release:php:fpm-7.1-debug:
+    tags: ["docker"]
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -38,6 +80,7 @@ release:php:fpm-7.1-debug:
         - master
 
 deploy:php:fpm-7.1-debug:
+    tags: ["docker"]
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -49,6 +92,7 @@ deploy:php:fpm-7.1-debug:
 
 # Latest Phalcon
 build:phalcon:latest:
+    tags: ["docker"]
     stage: build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon/latest
@@ -62,6 +106,7 @@ test:phalcon:latest:
         - php -m | grep phalcon
 
 release:phalcon:latest:
+    tags: ["docker"]
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
@@ -75,6 +120,7 @@ release:phalcon:latest:
         - master
 
 deploy:phalcon:latest:
+    tags: ["docker"]
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon:latest
@@ -89,6 +135,7 @@ deploy:phalcon:latest:
 
 #Docker
 build:docker:latest:
+    tags: ["docker"]
     stage: build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
@@ -102,6 +149,7 @@ test:docker:latest:
         - wget -O - twistersfury.com
 
 release:docker:latest:
+    tags: ["docker"]
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
@@ -112,6 +160,7 @@ release:docker:latest:
         - master
 
 deploy:docker:latest:
+    tags: ["docker"]
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/docker:latest
@@ -123,6 +172,7 @@ deploy:docker:latest:
 
 #XDebug Phalcon
 build:phalcon:xdebug:
+    tags: ["docker"]
     stage: secondary-build
     script:
         - docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon/xdebug
@@ -136,6 +186,7 @@ test:phalcon:xdebug:
         - php -m | grep xdebug
 
 release:phalcon:xdebug:
+    tags: ["docker"]
     stage: secondary-release
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
@@ -149,6 +200,7 @@ release:phalcon:xdebug:
         - master
 
 deploy:phalcon:xdebug:
+    tags: ["docker"]
     stage: secondary-deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/phalcon:xdebug
