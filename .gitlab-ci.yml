@@ -83,6 +83,7 @@ release:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: release
     script:
+        - git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile || true
         - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
         - dockerize || docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
