@@ -18,8 +18,8 @@ build:nginx:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
-        - dockerize || (echo "no need to build new docker image" && exit 0)
+#        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
@@ -34,14 +34,14 @@ test:nginx:
         ENV_DOMAIN_NAME: nginx.test
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
     script:
-        - wget -sO - http://nginx.test/.well-known/ci.log
+        - wget -qO - http://nginx.test/.well-known/ci.log
 
 release:nginx:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
-        - dockerize || (echo "no need to build new docker image" && exit 0)
+#        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -53,8 +53,8 @@ deploy:nginx:
     tags: ["docker"]
     stage: deploy
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
-        - dockerize || (echo "no need to build new docker image" && exit 0)
+#        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:latest
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
