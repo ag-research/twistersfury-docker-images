@@ -18,6 +18,8 @@ build:nginx:
     tags: ["docker"]
     stage: build
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
@@ -38,6 +40,8 @@ release:nginx:
     tags: ["docker"]
     stage: release
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -49,6 +53,8 @@ deploy:nginx:
     tags: ["docker"]
     stage: deploy
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:latest
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -61,6 +67,8 @@ build:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: build
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -75,6 +83,8 @@ release:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: release
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -86,6 +96,8 @@ deploy:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: deploy
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -141,6 +153,8 @@ build:docker:latest:
     tags: ["docker"]
     stage: build
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
@@ -155,6 +169,8 @@ release:docker:latest:
     tags: ["docker"]
     stage: release
     script:
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
