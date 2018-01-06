@@ -69,9 +69,9 @@ build:php:fpm-7.1-debug:
     script:
         - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
-        - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+        - dockerize || docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
+        - dockerize || echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize || docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
 
 test:php:fpm-7.1-debug:
     image: $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -85,10 +85,10 @@ release:php:fpm-7.1-debug:
     script:
         - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
-        - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
-        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
+        - dockerize || docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+        - dockerize || docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
+        - dockerize || echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize || docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
     only:
         - master
 
@@ -98,10 +98,10 @@ deploy:php:fpm-7.1-debug:
     script:
         - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
-        - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
-        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
-        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
-        - docker push twistersfury/php:fpm-7.1-debug
+        - dockerize || docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+        - dockerize || docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
+        - dockerize || echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - dockerize || docker push twistersfury/php:fpm-7.1-debug
     only:
         - master
 
@@ -155,9 +155,9 @@ build:docker:latest:
     script:
         - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
-        - docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
+        - dockerize || docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
+        - dockerize || echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize || docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
 
 test:docker:latest:
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
@@ -171,10 +171,10 @@ release:docker:latest:
     script:
         - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
-        - docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
-        - docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/docker:latest
+        - dockerize || docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
+        - dockerize || docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
+        - dockerize || echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize || docker push $CI_REGISTRY_IMAGE/docker:latest
     only:
         - master
 
@@ -182,10 +182,12 @@ deploy:docker:latest:
     tags: ["docker"]
     stage: deploy
     script:
-        - docker pull $CI_REGISTRY_IMAGE/docker:latest
-        - docker tag $CI_REGISTRY_IMAGE/docker:latest twistersfury/docker:latest
-        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
-        - docker push twistersfury/docker:latest
+        - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+        - dockerize || docker pull $CI_REGISTRY_IMAGE/docker:latest
+        - dockerize || docker tag $CI_REGISTRY_IMAGE/docker:latest twistersfury/docker:latest
+        - dockerize || echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - dockerize || docker push twistersfury/docker:latest
     only:
         - master
 
