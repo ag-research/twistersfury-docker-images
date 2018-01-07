@@ -30,7 +30,7 @@ test:nginx:
     services:
         - name: $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
           alias: nginx.test
-          command: touch /etc/letsencrypt/live/nginx.test/fullchain.pem && /etc/letsencrypt/live/nginx.test/privkey.pem && touch /etc/letsencrypt/live/nginx.test/chain.pem && nginx -g 'daemon off;'
+          command: "touch /etc/letsencrypt/live/nginx.test/fullchain.pem && /etc/letsencrypt/live/nginx.test/privkey.pem && touch /etc/letsencrypt/live/nginx.test/chain.pem && nginx -g 'daemon off;'"
     variables:
         ENV_DOMAIN_NAME: nginx.test
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
