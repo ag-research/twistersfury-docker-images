@@ -4,7 +4,8 @@ EXPOSE 80 443
 ENTRYPOINT ["/mnt/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 
-RUN mkdir -p /data/letsencrypt
+RUN mkdir -p /data/letsencrypt && \
+    mkdir -p /etc/letsencrypt/live/
 
 RUN echo "OKAY" > /data/letsencrypt/ci.log
 
