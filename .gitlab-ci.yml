@@ -24,7 +24,7 @@ build:nginx:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
 
-test:nginx:
+.test:nginx:
     stage: test
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     services:
