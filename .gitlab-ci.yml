@@ -30,7 +30,7 @@ test:nginx:
     services:
         - name: $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
           alias: nginx.test
-          command: [ "sh", "-c", "-u", "nginx", "echo '.' > /etc/letsencrypt/live/nginx.test/fullchain.pem && echo '.' > /etc/letsencrypt/live/nginx.test/privkey.pem && echo '.' >  /etc/letsencrypt/live/nginx.test/chain.pem && nginx -g 'daemon off;'"]
+          command: [ "sh", "-c", "echo '.' > /etc/letsencrypt/live/nginx.test/fullchain.pem && echo '.' > /etc/letsencrypt/live/nginx.test/privkey.pem && echo '.' >  /etc/letsencrypt/live/nginx.test/chain.pem && nginx -g 'daemon off;'"]
     variables:
         ENV_DOMAIN_NAME: nginx.test
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
