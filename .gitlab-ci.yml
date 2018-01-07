@@ -18,7 +18,7 @@ build:nginx:
     tags: ["docker"]
     stage: build
     script:
-#        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 1; fi; || git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 1; else git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null; fi'
 #        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -40,7 +40,7 @@ release:nginx:
     tags: ["docker"]
     stage: release
     script:
-#        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null; fi'
 #        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
@@ -53,7 +53,7 @@ deploy:nginx:
     tags: ["docker"]
     stage: deploy
     script:
-#        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null; fi'
 #        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:latest
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
@@ -67,7 +67,7 @@ build:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null; fi'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -83,7 +83,7 @@ release:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -96,7 +96,7 @@ deploy:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: deploy
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -110,7 +110,7 @@ build:phalcon:latest:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null; fi'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon/latest
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
@@ -126,7 +126,7 @@ release:phalcon:latest:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:latest
         - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
@@ -142,7 +142,7 @@ deploy:phalcon:latest:
     tags: ["docker"]
     stage: deploy
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:latest
         - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:latest twistersfury/phalcon:latest
         - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
@@ -159,7 +159,7 @@ build:docker:latest:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null; fi'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
@@ -175,7 +175,7 @@ release:docker:latest:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -188,7 +188,7 @@ deploy:docker:latest:
     tags: ["docker"]
     stage: deploy
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:latest twistersfury/docker:latest
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -202,7 +202,7 @@ build:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-build
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null; fi'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon/xdebug
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
@@ -218,7 +218,7 @@ release:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-release
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug
         - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
@@ -234,7 +234,7 @@ deploy:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-deploy
     script:
-        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; fi; || git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null'
+        - alias 'dockerize=if [ $ENV_FORCE_BUILD == 1 ]; then exit 0; else git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null; fi'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:xdebug
         - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:xdebug twistersfury/phalcon:xdebug
         - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
