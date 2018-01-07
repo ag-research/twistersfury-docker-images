@@ -18,7 +18,7 @@ build:nginx:
     tags: ["docker"]
     stage: build
     script:
-#        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
 #        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -41,7 +41,7 @@ release:nginx:
     tags: ["docker"]
     stage: release
     script:
-#        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
 #        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
@@ -54,7 +54,7 @@ deploy:nginx:
     tags: ["docker"]
     stage: deploy
     script:
-#        - alias 'dockerize=git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
+#        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./nginx/Dockerfile > /dev/null'
 #        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:latest
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
@@ -68,7 +68,7 @@ build:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -84,7 +84,7 @@ release:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -97,7 +97,7 @@ deploy:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: deploy
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -111,9 +111,11 @@ build:phalcon:latest:
     tags: ["docker"]
     stage: build
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon/latest
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null'
+        - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon/latest
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
+        - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:latest:
     image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
@@ -125,13 +127,15 @@ release:phalcon:latest:
     tags: ["docker"]
     stage: release
     script:
-        - docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:latest
-        - export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:$PHALCON_TAG
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/phalcon:$PHALCON_TAG
-        - docker push $CI_REGISTRY_IMAGE/phalcon:latest
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:latest
+        - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:$PHALCON_TAG
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:$PHALCON_TAG
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:latest
+        - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
 
@@ -139,13 +143,15 @@ deploy:phalcon:latest:
     tags: ["docker"]
     stage: deploy
     script:
-        - docker pull $CI_REGISTRY_IMAGE/phalcon:latest
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:latest twistersfury/phalcon:latest
-        - export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME twistersfury/phalcon:$PHALCON_TAG
-        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
-        - docker push twistersfury/phalcon:$PHALCON_TAG
-        - docker push twistersfury/phalcon:latest
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./phalcon/latest/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:latest
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:latest twistersfury/phalcon:latest
+        - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME twistersfury/phalcon:$PHALCON_TAG
+        - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - dockerize && docker push twistersfury/phalcon:$PHALCON_TAG
+        - dockerize && docker push twistersfury/phalcon:latest
+        - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
 
@@ -154,7 +160,7 @@ build:docker:latest:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
@@ -170,7 +176,7 @@ release:docker:latest:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -183,7 +189,7 @@ deploy:docker:latest:
     tags: ["docker"]
     stage: deploy
     script:
-        - alias 'dockerize=git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./docker/Dockerfile > /dev/null'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:latest twistersfury/docker:latest
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -197,9 +203,11 @@ build:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-build
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon/xdebug
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null'
+        - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon/xdebug
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
+        - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:xdebug:
     image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
@@ -211,13 +219,15 @@ release:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-release
     script:
-        - docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
-        - docker tag $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug
-        - export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug-$PHALCON_TAG
-        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - docker push $CI_REGISTRY_IMAGE/phalcon:xdebug-$PHALCON_TAG
-        - docker push $CI_REGISTRY_IMAGE/phalcon:xdebug
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug
+        - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:xdebug-$PHALCON_TAG
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:xdebug-$PHALCON_TAG
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:xdebug
+        - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
 
@@ -225,12 +235,14 @@ deploy:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-deploy
     script:
-        - docker pull $CI_REGISTRY_IMAGE/phalcon:xdebug
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:xdebug twistersfury/phalcon:xdebug
-        - export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
-        - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME twistersfury/phalcon:xdebug-$PHALCON_TAG
-        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
-        - docker push twistersfury/phalcon:xdebug-$PHALCON_TAG
-        - docker push twistersfury/phalcon:xdebug
+        - alias 'dockerize=$ENV_FORCE_BUILD || git whatchanged HEAD^! | grep ./phalcon/xdebug/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:xdebug
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:xdebug twistersfury/phalcon:xdebug
+        - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME twistersfury/phalcon:xdebug-$PHALCON_TAG
+        - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - dockerize && docker push twistersfury/phalcon:xdebug-$PHALCON_TAG
+        - dockerize && docker push twistersfury/phalcon:xdebug
+        - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
