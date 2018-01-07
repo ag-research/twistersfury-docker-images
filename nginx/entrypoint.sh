@@ -7,7 +7,7 @@ if [ ! -d "/mnt/letsencrypt/live/$ENV_DOMAIN_NAME" ]; then
 
     ls -al "/etc/letsencrypt/live/${ENV_DOMAIN_NAME}"
 
-    mv /mnt/certificate.crt /etc/letsencrypt/live/${ENV_DOMAIN_NAME}/fullchain.pem;
+    cp /mnt/certificate.crt /etc/letsencrypt/live/${ENV_DOMAIN_NAME}/fullchain.pem;
     mv /mnt/privateKey.key /etc/letsencrypt/live/${ENV_DOMAIN_NAME}/privkey.pem;
     mv /mnt/certificate.crt /etc/letsencrypt/live/${ENV_DOMAIN_NAME}/chain.pem;
 fi
