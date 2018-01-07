@@ -12,4 +12,6 @@ envsubst "$ENV_VARS" \
 
 nginx -t
 
+echo "$@"
+
 exec "$@"
