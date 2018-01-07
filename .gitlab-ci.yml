@@ -68,7 +68,7 @@ build:php:fpm-7.1-debug:
     tags: ["docker"]
     stage: build
     script:
-        - git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile
+        - git whatchanged HEAD^!
         - alias 'dockerize=git whatchanged HEAD^! | grep ./php/7.1/fpm-debug/Dockerfile > /dev/null'
         - dockerize || (echo "no need to build new docker image" && exit 0)
         - dockerize || docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
