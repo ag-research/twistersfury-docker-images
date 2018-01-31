@@ -159,6 +159,7 @@ build:docker:latest:
     tags: ["docker"]
     stage: build
     script:
+        - ${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^!
         - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep docker/Dockerfile > /dev/null'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME ./docker
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
