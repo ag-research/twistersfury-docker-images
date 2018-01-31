@@ -177,9 +177,9 @@ release:docker:latest:
     stage: release
     before_script:
         - apk --no-cache add curl
+    script:
         - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep docker/Dockerfile > /dev/null'
         - COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
-    script:
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:$COMPOSER_VERSION
@@ -192,10 +192,14 @@ release:docker:latest:
 deploy:docker:latest:
     tags: ["docker"]
     stage: deploy
+    before_script:
+        - apk --no-cache add curl
     script:
         - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep docker/Dockerfile > /dev/null'
+        - COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:latest twistersfury/docker:latest
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME twistersfury/docker:$COMPOSER_VERSION
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - dockerize && docker push twistersfury/docker:latest
         - dockerize || (echo "no need to build new docker image" && exit 0)
