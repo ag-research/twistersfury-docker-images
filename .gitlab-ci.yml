@@ -175,10 +175,14 @@ test:docker:latest:
 release:docker:latest:
     tags: ["docker"]
     stage: release
-    script:
+    before_script:
+        - apk --no-cache add curl
         - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep docker/Dockerfile > /dev/null'
+        - COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
+    script:
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:$COMPOSER_VERSION
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/docker:latest
         - dockerize || (echo "no need to build new docker image" && exit 0)
