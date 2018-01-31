@@ -170,6 +170,7 @@ test:docker:latest:
     stage: test
     script:
         - which wget
+        - which docker-compose
 
 release:docker:latest:
     tags: ["docker"]
