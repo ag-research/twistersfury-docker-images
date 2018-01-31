@@ -185,6 +185,7 @@ release:docker:latest:
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:$COMPOSE_VERSION
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/docker:latest
+        - dockerize && docker push $CI_REGISTRY_IMAGE/docker:$COMPOSE_VERSION
         - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
@@ -202,6 +203,7 @@ deploy:docker:latest:
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME twistersfury/docker:$COMPOSE_VERSION
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - dockerize && docker push twistersfury/docker:latest
+        - dockerize && docker push twistersfury/docker:$COMPOSE_VERSION
         - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
