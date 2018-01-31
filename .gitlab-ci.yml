@@ -182,7 +182,7 @@ release:docker:latest:
         - COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:latest
-        - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:$COMPOSER_VERSION
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/docker:$COMPOSE_VERSION
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/docker:latest
         - dockerize || (echo "no need to build new docker image" && exit 0)
@@ -199,7 +199,7 @@ deploy:docker:latest:
         - COMPOSE_VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d\" -f4)
         - dockerize && docker pull $CI_REGISTRY_IMAGE/docker:latest
         - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:latest twistersfury/docker:latest
-        - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME twistersfury/docker:$COMPOSER_VERSION
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME twistersfury/docker:$COMPOSE_VERSION
         - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - dockerize && docker push twistersfury/docker:latest
         - dockerize || (echo "no need to build new docker image" && exit 0)
