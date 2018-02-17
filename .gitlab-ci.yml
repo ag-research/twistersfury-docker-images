@@ -208,6 +208,44 @@ deploy:docker:latest:
     only:
         - master
 
+# Latest Phalcon
+build:cron:latest:
+    tags: ["docker"]
+    stage: build
+    script:
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep cron/Dockerfile > /dev/null'
+        - dockerize && docker build -t $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME ./cron/latest
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+
+release:cron:latest:
+    tags: ["docker"]
+    stage: release
+    script:
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep cron/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/cron:latest
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/cron:latest
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+    only:
+        - master
+
+deploy:cron:latest:
+    tags: ["docker"]
+    stage: deploy
+    script:
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep cron/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/cron:latest
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/cron:latest twistersfury/cron:latest
+        - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - dockerize && docker push twistersfury/cron:latest
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+    only:
+        - master
+
+
 #XDebug Phalcon
 build:phalcon:xdebug:
     tags: ["docker"]

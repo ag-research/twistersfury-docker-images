@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if [ ! -f /mnt/cron.conf ]; then
+    echo "* * * * * echo 'Running'" > /mnt/cron.conf
+fi
+
+chmod 600 /mnt/cron.conf
+crontab /mnt/cron.conf
+
+exec "$@"
