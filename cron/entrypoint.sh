@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ ! -f /mnt/cron.conf ]; then
+if [ ! -f /mnt/cron.d/cron.conf ]; then
     echo "* * * * * echo 'Running'" > /mnt/cron.d/cron.conf
 fi
 
