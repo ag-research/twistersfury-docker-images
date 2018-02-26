@@ -1,6 +1,6 @@
 FROM alpine
 
-RUN apk add --no-cache ssmtp gettext
+RUN apk add --no-cache ssmtp gettext docker
 
 COPY ./entrypoint.sh /mnt/entrypoint.sh
 COPY ./ssmtp.conf /mnt/ssmtp.template
