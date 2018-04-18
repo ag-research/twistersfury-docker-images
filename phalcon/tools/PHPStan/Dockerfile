@@ -7,6 +7,7 @@ RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.or
     bash \
     gcc \
     libc-dev \
+    make \
     php7-dev
 
 #Installing Phalcon
