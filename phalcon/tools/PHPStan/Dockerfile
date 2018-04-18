@@ -5,6 +5,7 @@ ENV PHALCON_BRANCH master
 
 RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.7/community add \
     bash
+    php7-config
 
 #Installing Phalcon
 RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
