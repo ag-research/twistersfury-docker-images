@@ -16,5 +16,5 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && cd build \
     && ./install \
     && cd ../../ \
-    && docker-php-ext-enable phalcon \
+    && echo "extension=phalcon.so" > /usr/local/etc/php.d/10-phalcon.ini
     && rm -rf cphalcon-$PHALCON_BRANCH
