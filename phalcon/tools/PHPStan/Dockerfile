@@ -3,12 +3,14 @@ FROM phpstan/phpstan:latest
 #Configs For Versions
 ENV PHALCON_BRANCH master
 
-#Installing Phalcon
-RUN ln -s /usr/bin/sh /usr/bin/bash && /usr/bin/env bash
-RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
-    &&  cd cphalcon-$PHALCON_BRANCH/build
+RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.7/community add \
+    bash
 
-RUN ./cphalcon-$PHALCON_BRANCH/build/install
-RUN cd ../../
-RUN docker-php-ext-enable phalcon
-RUN rm -rf cphalcon-$PHALCON_BRANCH
+#Installing Phalcon
+RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
+    && cd cphalcon-$PHALCON_BRANCH \
+    && cd build \
+    && ./install \
+    && cd ../../ \
+    && docker-php-ext-enable phalcon \
+    && rm -rf cphalcon-$PHALCON_BRANCH
