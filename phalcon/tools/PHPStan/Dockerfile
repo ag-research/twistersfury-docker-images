@@ -4,8 +4,8 @@ FROM phpstan/phpstan:latest
 ENV PHALCON_BRANCH master
 
 #Installing Phalcon
-RUN ln -s /usr/bin/sh /usr/bin/bash \
-    && curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
+RUN ln -s /usr/bin/sh /usr/bin/bash && /usr/bin/env bash
+RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
     &&  cd cphalcon-$PHALCON_BRANCH/build
 
 RUN ./cphalcon-$PHALCON_BRANCH/build/install
