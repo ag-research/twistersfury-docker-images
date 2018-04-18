@@ -4,7 +4,7 @@ FROM phpstan/phpstan:latest
 ENV PHALCON_BRANCH master
 
 RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.7/community add \
-    bash
+    bash \
     php7-config
 
 #Installing Phalcon
