@@ -160,13 +160,13 @@ build:phalcon:phpstan:
     stage: build
     script:
         - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon/tools/PHPStan/Dockerfile > /dev/null'
-        - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon/latest
+        - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan ./phalcon/latest
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:phpstan:
-    image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
+    image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
     stage: test
     script:
         - php -m | grep phalcon
@@ -177,8 +177,8 @@ release:phalcon:phpstan:
     stage: release
     script:
         - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon/tools/PHPStan/Dockerfile > /dev/null'
-        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
-        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:phpstan
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan $CI_REGISTRY_IMAGE/phalcon:phpstan
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:phpstan
         - dockerize || (echo "no need to build new docker image" && exit 0)
