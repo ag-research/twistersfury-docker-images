@@ -170,7 +170,7 @@ test:phalcon:phpstan:
     stage: test
     script:
         - php -m | grep phalcon
-        - which phpstan
+#        - which phpstan
 
 release:phalcon:phpstan:
     tags: ["docker"]
