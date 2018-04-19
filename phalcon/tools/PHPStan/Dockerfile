@@ -8,7 +8,12 @@ RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.or
     gcc \
     libc-dev \
     make \
-    php7-dev
+    php7-dev \
+    php7-pear
+
+RUN pecl install \
+        xdebug \
+    && rm -rf /tmp/pear
 
 #Installing Phalcon
 RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
