@@ -17,6 +17,10 @@ envsubst "$ENV_VARS" \
     < /mnt/upstream.template \
     > /etc/nginx/conf.d/upstream.conf
 
+envsubst "$ENV_VARS" \
+    < /mnt/nginx.template \
+    > /etc/nginx/conf.d/default.conf
+
 nginx -t
 
 echo "$@"
