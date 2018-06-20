@@ -1,6 +1,6 @@
 #!/bin/sh
 
-ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST';
+ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST:$ENV_APPLICATION_ENV';
 
 # Allow Ability To Disable HTTPS Files (Only Load HTTP)
 if [ -z "$ENV_IGNORE_HTTPS" ]; then
