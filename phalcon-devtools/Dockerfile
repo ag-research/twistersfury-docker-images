@@ -12,4 +12,5 @@ RUN curl -fsSL https://github.com/phalcon/phalcon-devtools/archive/$PHALCON_BRAN
     && ./phalcon.sh \
     && ln -s $(pwd)/phalcon.php /usr/local/bin/phalcon
 
-ENTRYPOINT ["/usr/local/bin/phalcon"]
+ENTRYPOINT ["/bin/sh", "-c"]
+CMD ["/usr/local/bin/phalcon"]
