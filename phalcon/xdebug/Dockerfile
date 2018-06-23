@@ -21,6 +21,3 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && cd ../../ \
     && docker-php-ext-enable phalcon \
     && rm -rf cphalcon-$PHALCON_BRANCH
-
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["php-fpm", "-F"]
