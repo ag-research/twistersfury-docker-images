@@ -354,7 +354,7 @@ test:phalcon:dev-tools:
     image: $CI_REGISTRY_IMAGE/phalcon-devtools:$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
-        - php -m | grep xdebug
+        - phalcon | grep 'Phalcon DevTools'
 
 release:phalcon:dev-tools:
     tags: ["docker"]
