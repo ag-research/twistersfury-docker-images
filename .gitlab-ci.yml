@@ -338,3 +338,46 @@ deploy:phalcon:xdebug:
         - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
+        
+#XDebug Phalcon
+build:phalcon:dev-tools:
+    tags: ["docker"]
+    stage: secondary-build
+    script:
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon-devtools/Dockerfile > /dev/null'
+        - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME ./phalcon-devtools
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+
+test:phalcon:dev-tools:
+    image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
+    stage: secondary-test
+    script:
+        - php -m | grep xdebug
+
+release:phalcon:dev-tools:
+    tags: ["docker"]
+    stage: secondary-release
+    script:
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon-devtools/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon-devtools
+        - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon-devtools
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+    only:
+        - master
+
+deploy:phalcon:dev-tools:
+    tags: ["docker"]
+    stage: secondary-deploy
+    script:
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon-devtools/Dockerfile > /dev/null'
+        - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon-devtools
+        - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon-devtools twistersfury/phalcon-devtools
+        - dockerize && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - dockerize && docker push twistersfury/phalcon-devtools
+        - dockerize || (echo "no need to build new docker image" && exit 0)
+    only:
+        - master
