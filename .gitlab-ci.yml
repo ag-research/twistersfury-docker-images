@@ -126,7 +126,7 @@ release:phalcon:latest:
     tags: ["docker"]
     stage: release
     script:
-        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon/latest/Dockerfile > /dev/null'
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} || git whatchanged HEAD^! | grep phalcon/latest/Dockerfile > /dev/null'
         - dockerize && docker pull $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
         - dockerize && docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon:latest
         - dockerize && export PHALCON_TAG=`docker run --rm $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME php -r "echo \Phalcon\Version::get();"`
