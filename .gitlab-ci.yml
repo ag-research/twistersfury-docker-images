@@ -110,7 +110,7 @@ build:phalcon:latest:
     tags: ["docker"]
     stage: build
     script:
-        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} && git whatchanged HEAD^! | grep phalcon/latest/Dockerfile > /dev/null'
+        - alias 'dockerize=${ENV_FORCE_BUILD+"true"} || git whatchanged HEAD^! | grep phalcon/latest/Dockerfile > /dev/null'
         - dockerize && docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME ./phalcon/latest
         - dockerize && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - dockerize && docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
