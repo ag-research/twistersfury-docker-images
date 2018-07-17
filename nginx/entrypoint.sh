@@ -17,9 +17,11 @@ envsubst "$ENV_VARS" \
     < /mnt/upstream.template \
     > /etc/nginx/conf.d/upstream.conf
 
-envsubst "$ENV_VARS" \
-    < /mnt/nginx.template \
-    > /etc/nginx/conf.d/default.conf
+if [ -f /mnt/nginx.template ]; then
+    envsubst "$ENV_VARS" \
+        < /mnt/nginx.template \
+        > /etc/nginx/conf.d/default.conf
+fi
 
 nginx -t
 
