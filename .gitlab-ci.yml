@@ -173,7 +173,9 @@ build:phalcon:phpstan:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:phpstan:
-    image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
+    image:
+        name: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
+        entrypoint: ""
     stage: test
     script:
         - php -m | grep phalcon
