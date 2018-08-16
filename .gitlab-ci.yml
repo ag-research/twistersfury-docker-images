@@ -175,7 +175,7 @@ build:phalcon:phpstan:
 test:phalcon:phpstan:
     image:
         name: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
-        entrypoint: ""
+        entrypoint: [""]
     stage: test
     script:
         - php -m | grep phalcon
