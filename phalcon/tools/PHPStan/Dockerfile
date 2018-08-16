@@ -25,5 +25,5 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
     && rm -rf cphalcon-$PHALCON_BRANCH
 
-ENTRYPOINT ["/bin/sh", "-c"]
-CMD ["phpstan"]
+ENTRYPOINT ["phpstan"]
+CMD ["analyse", "."]
