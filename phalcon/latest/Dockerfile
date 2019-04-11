@@ -15,6 +15,7 @@ RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | t
     && ./configure \
     && make \
     && make test \
+    && make install \
     && cd ../ \
     && docker-php-ext-enable psr \
     && rm -rf php-psr-$PSR_BRANCH
