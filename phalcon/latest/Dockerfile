@@ -1,7 +1,7 @@
 FROM php:7.1-fpm
 
 RUN apt-get update && apt-get install -y \
-        curl
+        curl \
     && rm -rf /var/lib/apt/lists/* \
 
 #Configs For Versions
