@@ -4,6 +4,15 @@ FROM phpstan/phpstan:latest
 ENV PHALCON_BRANCH master
 ENV PSR_BRANCH master
 
+RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.8/community add \
+    bash \
+    gcc \
+    libc-dev \
+    make \
+    php7-dev \
+    php7-pear \
+    curl
+
 #Installing PSR
 RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | tar xz \
     && cd php-psr-$PSR_BRANCH \
@@ -15,14 +24,6 @@ RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | t
     && cd ../ \
     && docker-php-ext-enable --ini-name 0-psr.ini psr \
     && rm -rf php-psr-$PSR_BRANCH
-
-RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.8/community add \
-    bash \
-    gcc \
-    libc-dev \
-    make \
-    php7-dev \
-    php7-pear
 
 RUN pecl install \
         xdebug \
