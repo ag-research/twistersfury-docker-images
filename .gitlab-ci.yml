@@ -167,7 +167,7 @@ build:phalcon:phpstan:
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
         - alias 'dockerize=git whatchanged HEAD^! | grep phalcon/tools/PHPStan/Dockerfile > /dev/null'
-        - (normalRun || dockerize) && docker build -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan ./phalcon/tools/PHPStan
+        - (normalRun || dockerize) && docker build --pull -t $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan ./phalcon/tools/PHPStan
         - (normalRun || dockerize) && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - (normalRun || dockerize) && docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
         - dockerize || (echo "no need to build new docker image" && exit 0)
