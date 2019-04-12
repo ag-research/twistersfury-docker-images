@@ -1,4 +1,4 @@
-FROM alpine as psr
+FROM php:7.1-alpine as psr
 
 #Configs For Versions
 ENV PHALCON_BRANCH master
