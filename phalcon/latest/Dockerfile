@@ -17,7 +17,7 @@ RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | t
     && make test \
     && make install \
     && cd ../ \
-    && docker-php-ext-enable psr \
+    && docker-php-ext-enable --ini-name 0-psr.ini psr \
     && rm -rf php-psr-$PSR_BRANCH
 
 #Installing Phalcon
