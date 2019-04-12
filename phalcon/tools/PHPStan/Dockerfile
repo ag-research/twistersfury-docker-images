@@ -40,14 +40,13 @@ RUN pecl install \
 
 FROM phpstan/phpstan:latest
 
-COPY --from=xdebug /tmp/pear/temp/pear-build-defaultuserOnIHfA/xdebug-2.7.1/modules/xdebug.so /usr/lib/modules
-COPY --from=xdebug /etc/php7/conf.d/10-xdebug.ini /etc/php7/conf.d/
-
-COPY --from=twistersfury/phalcon /usr/lib/php7/modules/phalcon.so /usr/lib/modules
-COPY --from=twistersfury/phalcon /etc/php7/conf.d/xdebug.ini /etc/php7/conf.d
-
+COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so /usr/lib/php7/modules
+COPY --from=twistersfury/phalcon /usr/local/lib/php/extensions/no-debug-non-zts-20160303/phalcon.so /usr/lib/modules
 COPY --from=psr /usr/lib/php7/modules/psr.so /usr/lib/php7/modules
-COPY --from=psr /etc/php7/conf.d/xdebug.ini /etc/php7/conf.d
+
+RUN echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
+    && echo "zend_extension=xdebug.so" > /etc/php7/conf.d/10-xdebug.ini \
+    && echo "extension=psr.so" > /etc/php7/conf.d/00-psr.ini
 
 ENTRYPOINT ["phpstan"]
 CMD ["analyse", "."]
