@@ -36,7 +36,7 @@ RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.or
 
 RUN pecl install \
         xdebug \
-    && docker-php-ext-enable xdebug \
+    && docker-php-ext-enable xdebug
 
 FROM phpstan/phpstan:latest
 
