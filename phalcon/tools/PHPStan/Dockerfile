@@ -1,4 +1,4 @@
-FROM php:7.1-alpine as psr
+FROM php:7.2-alpine as psr
 
 #Configs For Versions
 ENV PHALCON_BRANCH master
@@ -23,7 +23,7 @@ RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | t
     && make install \
     && docker-php-ext-enable --ini-name 0-psr.ini psr
     
-FROM php:7.1-alpine as xdebug
+FROM php:7.2-alpine as xdebug
 
 RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.8/community add \
     bash \
