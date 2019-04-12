@@ -40,9 +40,9 @@ RUN pecl install \
 
 FROM phpstan/phpstan:latest
 
-COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20160303/xdebug.so /usr/lib/php7/modules
-COPY --from=twistersfury/phalcon /usr/local/lib/php/extensions/no-debug-non-zts-20160303/phalcon.so /usr/lib/php7/modules
-COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20160303//psr.so /usr/lib/php7/modules
+COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so /usr/lib/php7/modules
+COPY --from=twistersfury/phalcon /usr/local/lib/php/extensions/no-debug-non-zts-20170718/phalcon.so /usr/lib/php7/modules
+COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20170718//psr.so /usr/lib/php7/modules
 
 RUN echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
     && echo "zend_extension=xdebug.so" > /etc/php7/conf.d/10-xdebug.ini \
