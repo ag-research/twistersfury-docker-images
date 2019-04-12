@@ -36,12 +36,12 @@ RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.or
 
 RUN pecl install \
         xdebug \
-    && docker-php-ext-enable xdebug
+    && echo "extension=xdebug.so" > /etc/php7/conf.d/10-phalcon.ini
 
 FROM phpstan/phpstan:latest
 
-COPY --from=xdebug /usr/lib/php7/modules/xdebug.so /usr/lib/modules
-COPY --from=xdebug /etc/php7/conf.d/xdebug.ini /etc/php7/conf.d/
+COPY --from=xdebug /tmp/pear/temp/pear-build-defaultuserOnIHfA/xdebug-2.7.1/modules/xdebug.so /usr/lib/modules
+COPY --from=xdebug /etc/php7/conf.d/10-xdebug.ini /etc/php7/conf.d/
 
 COPY --from=twistersfury/phalcon /usr/lib/php7/modules/phalcon.so /usr/lib/modules
 COPY --from=twistersfury/phalcon /etc/php7/conf.d/xdebug.ini /etc/php7/conf.d
