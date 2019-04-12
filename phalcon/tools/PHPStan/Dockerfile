@@ -2,6 +2,19 @@ FROM phpstan/phpstan:latest
 
 #Configs For Versions
 ENV PHALCON_BRANCH master
+ENV PSR_BRANCH master
+
+#Installing PSR
+RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | tar xz \
+    && cd php-psr-$PSR_BRANCH \
+    && phpize \
+    && ./configure \
+    && make \
+    && make test \
+    && make install \
+    && cd ../ \
+    && docker-php-ext-enable --ini-name 0-psr.ini psr \
+    && rm -rf php-psr-$PSR_BRANCH
 
 RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.org/alpine/v3.8/community add \
     bash \
