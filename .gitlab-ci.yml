@@ -163,7 +163,7 @@ deploy:phalcon:latest:
 # Latest Phalcon
 build:phalcon:phpstan:
     tags: ["docker"]
-    stage: build
+    stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
         - alias 'dockerize=git whatchanged HEAD^! | grep phalcon/tools/PHPStan/Dockerfile > /dev/null'
@@ -183,7 +183,7 @@ test:phalcon:phpstan:
 
 release:phalcon:phpstan:
     tags: ["docker"]
-    stage: release
+    stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
         - alias 'dockerize=git whatchanged HEAD^! | grep phalcon/tools/PHPStan/Dockerfile > /dev/null'
@@ -197,7 +197,7 @@ release:phalcon:phpstan:
 
 deploy:phalcon:phpstan:
     tags: ["docker"]
-    stage: deploy
+    stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
         - alias 'dockerize=git whatchanged HEAD^! | grep phalcon/tools/PHPStan/Dockerfile > /dev/null'
