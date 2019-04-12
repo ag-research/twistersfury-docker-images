@@ -41,7 +41,7 @@ RUN pecl install \
 FROM phpstan/phpstan:latest
 
 COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so /usr/lib/php7/modules
-COPY --from=registry.gitlab.com/twistersfury/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20170718/phalcon.so /usr/lib/php7/modules
+COPY --from=registry.gitlab.com/twistersfury/docker-images/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20170718/phalcon.so /usr/lib/php7/modules
 COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20170718//psr.so /usr/lib/php7/modules
 
 RUN echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
