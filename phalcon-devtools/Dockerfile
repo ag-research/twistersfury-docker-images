@@ -1,7 +1,7 @@
 FROM twistersfury/phalcon
 
 #Configs For Versions
-ENV PHALCON_BRANCH master
+ENV PHALCON_BRANCH 4.0.x
 
 RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql
 
