@@ -1,4 +1,4 @@
-FROM php:7.2-alpine as psr
+FROM php:7.3-alpine as psr
 
 #Configs For Versions
 ENV PHALCON_BRANCH master
@@ -41,7 +41,7 @@ RUN pecl install \
 FROM phpstan/phpstan:latest
 
 COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so /usr/lib/php7/modules
-COPY --from=registry.gitlab.com/twistersfury/docker-images/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20170718/phalcon.so /usr/lib/php7/modules
+COPY --from=registry.gitlab.com/twistersfury/docker-images/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20180731/phalcon.so /usr/lib/php7/modules
 COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20170718//psr.so /usr/lib/php7/modules
 
 RUN echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
