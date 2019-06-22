@@ -11,10 +11,11 @@ RUN pecl install \
     && rm -rf /tmp/pear
 
 ENV PSR_BRANCH v0.6.0
+ENV PSR_BRANCH_FOLDER 0.6.0
 
 #Installing PSR
 RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | tar xz \
-    && cd php-psr-$PSR_BRANCH \
+    && cd php-psr-$PSR_BRANCH_FOLDER \
     && phpize \
     && ./configure \
     && make \
@@ -22,7 +23,7 @@ RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | t
     && make install \
     && cd ../ \
     && docker-php-ext-enable --ini-name 0-psr.ini psr \
-    && rm -rf php-psr-$PSR_BRANCH
+    && rm -rf php-psr-$PSR_BRANCH_FOLDER
 
 #Configs For Versions
 ENV PHALCON_BRANCH 4.0.x
