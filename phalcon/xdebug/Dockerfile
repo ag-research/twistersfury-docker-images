@@ -10,7 +10,7 @@ RUN pecl install \
         xdebug \
     && rm -rf /tmp/pear
 
-ENV PSR_BRANCH master
+ENV PSR_BRANCH 0.6.0
 
 #Installing PSR
 RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | tar xz \
