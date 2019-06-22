@@ -25,7 +25,7 @@ RUN curl -fsSL https://github.com/jbboehr/php-psr/archive/$PSR_BRANCH.tar.gz | t
     && rm -rf php-psr-$PSR_BRANCH
 
 #Configs For Versions
-ENV PHALCON_BRANCH master
+ENV PHALCON_BRANCH 4.0.x
 
 #Installing Phalcon
 RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.gz | tar xz \
