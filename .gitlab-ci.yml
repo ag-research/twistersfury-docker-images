@@ -308,7 +308,7 @@ deploy:cron:latest:
 
 
 #XDebug Phalcon
-build:phalcon:xdebug:
+.build:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-build
     script:
@@ -319,13 +319,13 @@ build:phalcon:xdebug:
         - (normalRun || dockerize) && docker push $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
-test:phalcon:xdebug:
+.test:phalcon:xdebug:
     image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
         - php -m | grep xdebug
 
-release:phalcon:xdebug:
+.release:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-release
     script:
@@ -342,7 +342,7 @@ release:phalcon:xdebug:
     only:
         - master
 
-deploy:phalcon:xdebug:
+.deploy:phalcon:xdebug:
     tags: ["docker"]
     stage: secondary-deploy
     script:
