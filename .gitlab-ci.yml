@@ -453,8 +453,8 @@ deploy:zephir:phalcon:
         - (normalRun || dockerize) && docker tag $CI_REGISTRY_IMAGE/zephir:phalcon twistersfury/zephir:phalcon
         - (normalRun || dockerize) && docker tag $CI_REGISTRY_IMAGE/zephir:phalcon twistersfury/zephir:phalcon-$PHALCON_TAG
         - (normalRun || dockerize) && echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
-        - (normalRun || dockerize) && docker push $CI_REGISTRY_IMAGE/zephir:phalcon
-        - (normalRun || dockerize) && docker push $CI_REGISTRY_IMAGE/zephir:phalcon-$PHALCON_TAG
+        - (normalRun || dockerize) && docker push twistersfury/zephir:phalcon
+        - (normalRun || dockerize) && docker push twistersfury/zephir:phalcon-$PHALCON_TAG
         - dockerize || (echo "no need to build new docker image" && exit 0)
     only:
         - master
