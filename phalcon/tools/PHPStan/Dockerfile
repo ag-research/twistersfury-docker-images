@@ -35,8 +35,7 @@ RUN apk --update --progress --no-cache --repository http://dl-cdn.alpinelinux.or
     curl
 
 RUN pecl install \
-        xdebug \
-    && echo "extension=xdebug.so" > /etc/php7/conf.d/10-phalcon.ini
+        xdebug
 
 FROM php:7.3-alpine
 
@@ -48,7 +47,7 @@ RUN mkdir -p /etc/php7/conf.d \
     && echo "extension=psr.so" > /etc/php7/conf.d/00-psr.ini \
     && echo "memory_limit=-1" > /etc/php7/conf.d/99_memory-limit.ini
 
-COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so /usr/lib/php7/modules
+COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20180731/xdebug.so /usr/lib/php7/modules
 COPY --from=registry.gitlab.com/twistersfury/docker-images/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20180731/phalcon.so /usr/lib/php7/modules
 COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20180731/psr.so /usr/lib/php7/modules
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
