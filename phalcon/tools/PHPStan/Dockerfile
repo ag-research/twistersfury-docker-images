@@ -42,7 +42,7 @@ FROM php:7.3-alpine
 
 ARG PHPSTAN_VERSION
 
-RUN mkdir -p /etc/php7/conf.d
+RUN mkdir -p /etc/php7/conf.d \
     && echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
     && echo "zend_extension=xdebug.so" > /etc/php7/conf.d/10-xdebug.ini \
     && echo "extension=psr.so" > /etc/php7/conf.d/00-psr.ini \
