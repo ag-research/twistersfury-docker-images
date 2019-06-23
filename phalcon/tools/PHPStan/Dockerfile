@@ -42,7 +42,8 @@ FROM php:7.3-alpine
 
 ARG PHPSTAN_VERSION
 
-RUN echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
+RUN mkdir -p /etc/php7/conf.d
+    && echo "extension=phalcon.so" > /etc/php7/conf.d/10-phalcon.ini \
     && echo "zend_extension=xdebug.so" > /etc/php7/conf.d/10-xdebug.ini \
     && echo "extension=psr.so" > /etc/php7/conf.d/00-psr.ini \
     && echo "memory_limit=-1" > /etc/php7/conf.d/99_memory-limit.ini
