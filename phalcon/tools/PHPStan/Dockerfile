@@ -47,9 +47,9 @@ RUN mkdir -p /etc/php7/conf.d \
     && echo "extension=psr.so" > /usr/local/etc/php/conf.d/00-psr.ini \
     && echo "memory_limit=-1" > /usr/local/etc/php/conf.d/99_memory-limit.ini
 
-COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20180731/xdebug.so /usr/local/etc/php/conf.d/
-COPY --from=registry.gitlab.com/twistersfury/docker-images/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20180731/phalcon.so /usr/local/etc/php/conf.d/
-COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20180731/psr.so /usr/local/etc/php/conf.d/
+COPY --from=xdebug /usr/local/lib/php/extensions/no-debug-non-zts-20180731/xdebug.so /usr/local/lib/php/extensions/no-debug-non-zts-20180731/
+COPY --from=registry.gitlab.com/twistersfury/docker-images/phalcon:master /usr/local/lib/php/extensions/no-debug-non-zts-20180731/phalcon.so /usr/local/lib/php/extensions/no-debug-non-zts-20180731/
+COPY --from=psr /usr/local/lib/php/extensions/no-debug-non-zts-20180731/psr.so /usr/local/lib/php/extensions/no-debug-non-zts-20180731/
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 RUN rm -rf /var/cache/apk/* /var/tmp/* /tmp/* \
