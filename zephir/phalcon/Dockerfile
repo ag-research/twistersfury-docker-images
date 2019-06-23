@@ -24,4 +24,3 @@ RUN curl -fsSL https://github.com/phalcon/php-zephir-parser/archive/$ZEPHIR_PARS
     && cd ../ \
     && docker-php-ext-enable zephir_parser \
     && rm -rf php-zephir-parser-$ZEPHIR_PARSER
-
