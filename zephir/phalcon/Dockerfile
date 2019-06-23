@@ -6,6 +6,19 @@ RUN mkdir -p /app
 
 ENV ZEPHIR_PARSER master
 
+RUN apt-get update && apt-get install -y \
+        build-essential \
+        libpcre3-dev \
+        gcc \
+        make \
+        re2c \
+        autoconf \
+        automake \
+        git \
+        sudo \
+        file \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN pecl install \
         xdebug \
         redis \
