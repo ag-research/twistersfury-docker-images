@@ -39,6 +39,9 @@ RUN pecl install \
 
 FROM php:7.3-alpine
 
+ENV COMPOSER_HOME /composer
+ENV COMPOSER_ALLOW_SUPERUSER 1
+ENV PATH /composer/vendor/bin:$PATH
 ARG PHPSTAN_VERSION
 
 RUN mkdir -p /etc/php7/conf.d \
