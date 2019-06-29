@@ -1,6 +1,6 @@
 FROM docker:latest
 
-RUN apk --no-cache add py-pip python-dev libffi-dev openssl-dev gcc libc-dev make git openssh openssl wget
+RUN apk --no-cache add py-pip python-dev libffi-dev openssl-dev gcc libc-dev make git openssh openssl wget bash
 
 ARG COMPOSE_VERSION
 ENV COMPOSE_VERSION ${COMPOSE_VERSION:-master}
