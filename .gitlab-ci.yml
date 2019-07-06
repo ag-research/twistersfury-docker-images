@@ -18,6 +18,8 @@ PHP-CS-Fixer (Build):
         - docker
     stage: build
     only:
+        refs:
+            - schedules
         changes:
             - php-cs-fixer/*
     script:
@@ -28,6 +30,11 @@ PHP-CS-Fixer (Build):
 PHP-CS-Fixer (Test):
     stage: test
     image: $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
+    only:
+        refs:
+            - schedules
+        changes:
+            - php-cs-fixer/*
     script:
         - php-cs-fixer --help
 
@@ -41,6 +48,7 @@ PHP-CS-Fixer (Release):
     only:
         refs:
             - master
+            - schedules
         changes:
             - php-cs-fixer/*
 
