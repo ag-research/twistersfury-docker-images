@@ -13,6 +13,51 @@ stages:
     - secondary-release
     - secondary-deploy
 
+PHP-CS-Fixer (Build):
+    tags:
+        - docker
+    stage: build
+    only:
+        changes:
+            - php-cs-fixer/*
+    script:
+        - docker build --pull -t $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME ./nginx
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
+
+PHP-CS-Fixer (Test):
+    stage: test
+    image: php-cs-fixer:$CI_BUILD_REF_NAME
+    script:
+        - /composer/vendor/bin/php-cs-fixer --help
+
+PHP-CS-Fixer (Release):
+    stage: release
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:latest
+    only:
+        refs:
+            - master
+        changes:
+            - php-cs-fixer/*
+
+PHP-CS-Fixer (Deploy):
+    tags: ["docker"]
+    stage: deploy
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:latest
+        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php-cs-fixer:latest
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - docker push twistersfury/php-cs-fixer:latest
+    only:
+        refs:
+            - master
+        changes:
+            - php-cs-fixer/*
+
 #Nginx w/SSL
 build:nginx:
     tags: ["docker"]
