@@ -27,9 +27,9 @@ PHP-CS-Fixer (Build):
 
 PHP-CS-Fixer (Test):
     stage: test
-    image: php-cs-fixer:$CI_BUILD_REF_NAME
+    image: $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
     script:
-        - /composer/vendor/bin/php-cs-fixer --help
+        - php-cs-fixer --help
 
 PHP-CS-Fixer (Release):
     stage: release
