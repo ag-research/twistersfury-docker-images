@@ -52,7 +52,7 @@ PHP-CS-Fixer (Deploy):
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:latest
-        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php-cs-fixer:latest
+        - docker tag $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME twistersfury/php-cs-fixer:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/php-cs-fixer:latest
     only:
