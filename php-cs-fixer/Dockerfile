@@ -14,4 +14,3 @@ RUN apt-get update && apt-get install -y \
         && rm -rf /var/lib/apt/lists/*
 
 RUN composer global require friendsofphp/php-cs-fixer
-
