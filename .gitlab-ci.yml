@@ -21,7 +21,7 @@ PHP-CS-Fixer (Build):
         changes:
             - php-cs-fixer/*
     script:
-        - docker build --pull -t $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME ./nginx
+        - docker build --pull -t $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME ./php-cs-fixer
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
 
