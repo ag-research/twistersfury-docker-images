@@ -3,17 +3,19 @@
 ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST:$ENV_APPLICATION_ENV';
 
 # Updating Lets Encrypt
-if [ ! -z "ENV_LETS_ENCRYPT" ]; then
-    envsubst "$ENV_VARS" \
-        < /mnt/letsencrypt-http.template \
-        > /etc/nginx/conf.d/letsencrypt-http.conf
-fi
+#if [ ! -z "ENV_LETS_ENCRYPT" ]; then
+#
+#fi
 
 # Allow Ability To Disable HTTPS Files (Only Load HTTP)
 if [ -z "$ENV_IGNORE_HTTPS" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-https.template \
         > /etc/nginx/conf.d/letsencrypt-https.conf
+else
+    envsubst "$ENV_VARS" \
+        < /mnt/letsencrypt-http.template \
+        > /etc/nginx/conf.d/letsencrypt-http.conf
 fi
 
 envsubst "$ENV_VARS" \
