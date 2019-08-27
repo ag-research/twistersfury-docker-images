@@ -36,7 +36,7 @@ RUN pecl install \
     # && echo "zend_extension=xdebug.so" >> 00-xdebug.ini \
     && docker-php-ext-enable redis
 
-#Installing PSR
+#Installing Zephir Parser
 RUN curl -fsSL https://github.com/phalcon/php-zephir-parser/archive/$ZEPHIR_PARSER.tar.gz | tar xz \
     && cd php-zephir-parser-$ZEPHIR_PARSER \
     && phpize \
@@ -68,4 +68,4 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && php -d memory_limit=-1 /composer/vendor/bin/zephir build --export-classes \
     && docker-php-ext-enable phalcon \
     && cd ../ \
-    && rm -rf cphalcon-$PHALCON_BRANCH
+    && mv cphalcon-$PHALCON_BRANCH /opt/cphalcon #Moving For Building
