@@ -135,7 +135,12 @@ deploy:nginx:
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/nginx:latest
     only:
-        - master
+        refs:
+            - master
+        changes:
+            - nginx/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 #PHP Debug
 build:php:fpm-7.1-debug:
