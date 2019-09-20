@@ -132,7 +132,6 @@ deploy:nginx:
 build:php:fpm-7.1-debug:
     tags:
         - docker
-        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -145,7 +144,6 @@ build:php:fpm-7.1-debug:
 test:php:fpm-7.1-debug:
     tags:
         - docker
-        - dind
     image: $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
     stage: test
     script:
@@ -154,7 +152,6 @@ test:php:fpm-7.1-debug:
 release:php:fpm-7.1-debug:
     tags:
         - docker
-        - dind
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -170,7 +167,6 @@ release:php:fpm-7.1-debug:
 deploy:php:fpm-7.1-debug:
     tags:
         - docker
-        - dind
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -187,7 +183,6 @@ deploy:php:fpm-7.1-debug:
 build:phalcon:latest:
     tags:
         - docker
-        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -200,7 +195,6 @@ build:phalcon:latest:
 test:phalcon:latest:
     tags:
         - docker
-        - dind
     image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
     stage: test
     script:
@@ -209,7 +203,6 @@ test:phalcon:latest:
 release:phalcon:latest:
     tags:
         - docker
-        - dind
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -228,7 +221,6 @@ release:phalcon:latest:
 deploy:phalcon:latest:
     tags:
         - docker
-        - dind
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -248,7 +240,6 @@ deploy:phalcon:latest:
 build:phalcon:phpstan:
     tags:
         - docker
-        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -261,7 +252,6 @@ build:phalcon:phpstan:
 test:phalcon:phpstan:
     tags:
         - docker
-        - dind
     image:
         name: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
         entrypoint: [""]
@@ -273,7 +263,6 @@ test:phalcon:phpstan:
 release:phalcon:phpstan:
     tags:
         - docker
-        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -289,7 +278,6 @@ release:phalcon:phpstan:
 deploy:phalcon:phpstan:
     tags:
         - docker
-        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -306,7 +294,6 @@ deploy:phalcon:phpstan:
 build:docker:latest:
     tags:
         - docker
-        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -319,7 +306,6 @@ build:docker:latest:
 test:docker:latest:
     tags:
         - docker
-        - dind
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     stage: test
     script:
@@ -329,7 +315,6 @@ test:docker:latest:
 release:docker:latest:
     tags:
         - docker
-        - dind
     stage: release
     before_script:
         - apk --no-cache add curl
@@ -350,7 +335,6 @@ release:docker:latest:
 deploy:docker:latest:
     tags:
         - docker
-        - dind
     stage: deploy
     before_script:
         - apk --no-cache add curl
@@ -372,7 +356,6 @@ deploy:docker:latest:
 build:cron:latest:
     tags:
         - docker
-        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -385,7 +368,6 @@ build:cron:latest:
 release:cron:latest:
     tags:
         - docker
-        - dind
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -401,7 +383,6 @@ release:cron:latest:
 deploy:cron:latest:
     tags:
         - docker
-        - dind
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -419,7 +400,6 @@ deploy:cron:latest:
 .build:phalcon:xdebug:
     tags:
         - docker
-        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -432,7 +412,6 @@ deploy:cron:latest:
 .test:phalcon:xdebug:
     tags:
         - docker
-        - dind
     image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
@@ -441,7 +420,6 @@ deploy:cron:latest:
 .release:phalcon:xdebug:
     tags:
         - docker
-        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -460,7 +438,6 @@ deploy:cron:latest:
 .deploy:phalcon:xdebug:
     tags:
         - docker
-        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -480,7 +457,6 @@ deploy:cron:latest:
 build:phalcon:dev-tools:
     tags:
         - docker
-        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -493,7 +469,6 @@ build:phalcon:dev-tools:
 test:phalcon:dev-tools:
     tags:
         - docker
-        - dind
     image: $CI_REGISTRY_IMAGE/phalcon-devtools:$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
@@ -502,7 +477,6 @@ test:phalcon:dev-tools:
 release:phalcon:dev-tools:
     tags:
         - docker
-        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -518,7 +492,6 @@ release:phalcon:dev-tools:
 deploy:phalcon:dev-tools:
     tags:
         - docker
-        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -537,7 +510,6 @@ deploy:phalcon:dev-tools:
 build:zephir:phalcon:
     tags:
         - docker
-        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -550,7 +522,6 @@ build:zephir:phalcon:
 test:zephir:phalcon:
     tags:
         - docker
-        - dind
     image: $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
@@ -559,7 +530,6 @@ test:zephir:phalcon:
 release:zephir:phalcon:
     tags:
         - docker
-        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -578,7 +548,6 @@ release:zephir:phalcon:
 deploy:zephir:phalcon:
     tags:
         - docker
-        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
