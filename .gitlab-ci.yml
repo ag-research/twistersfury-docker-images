@@ -19,10 +19,10 @@ PHP-CS-Fixer (Build):
     stage: build
     rules:
         - changes:
-            - ./php-cs-fixer/*
-            when: on_success
+          - ./php-cs-fixer/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
-            when: on_success
+          when: on_success
         - when: manual
     script:
         - docker build --pull -t $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME ./php-cs-fixer
@@ -36,8 +36,8 @@ PHP-CS-Fixer (Test):
     image: $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./php-cs-fixer/*
-            when: on_success
+          - ./php-cs-fixer/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -55,8 +55,8 @@ PHP-CS-Fixer (Release):
         - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:latest
     rules:
         - changes:
-            - ./php-cs-fixer/*
-            when: on_success
+          - ./php-cs-fixer/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - if: '$CI_COMMIT_REF_NAME == "master"'
@@ -70,16 +70,13 @@ PHP-CS-Fixer (Deploy):
         - docker tag $CI_REGISTRY_IMAGE/php-cs-fixer:latest twistersfury/php-cs-fixer:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/php-cs-fixer:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./php-cs-fixer/*
-            when: on_success
+          - ./php-cs-fixer/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 #Nginx w/SSL
 build:nginx:
@@ -92,8 +89,8 @@ build:nginx:
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./nginx/*
-            when: on_success
+          - ./nginx/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -113,8 +110,8 @@ build:nginx:
         - wget -qO - http://nginx.test/.well-known/ci.log
     rules:
         - changes:
-            - ./nginx/*
-            when: on_success
+          - ./nginx/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -128,16 +125,13 @@ release:nginx:
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./nginx/*
-            when: on_success
+          - ./nginx/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:nginx:
     tags:
@@ -148,16 +142,13 @@ deploy:nginx:
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/nginx:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./nginx/*
-            when: on_success
+          - ./nginx/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 #PHP Debug
 build:php:fpm-7.1-debug:
@@ -170,8 +161,8 @@ build:php:fpm-7.1-debug:
         - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./php/7.1/fpm-debug/*
-            when: on_success
+          - ./php/7.1/fpm-debug/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -185,8 +176,8 @@ test:php:fpm-7.1-debug:
         - php -i | grep "enable-debug"
     rules:
         - changes:
-            - ./php/7.1/fpm-debug/*
-            when: on_success
+          - ./php/7.1/fpm-debug/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -200,16 +191,13 @@ release:php:fpm-7.1-debug:
         - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./php/7.1/fpm-debug/*
-            when: on_success
+          - ./php/7.1/fpm-debug/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:php:fpm-7.1-debug:
     tags:
@@ -220,16 +208,13 @@ deploy:php:fpm-7.1-debug:
         - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME twistersfury/php:fpm-7.1-debug
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/php:fpm-7.1-debug
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./php/7.1/fpm-debug/*
-            when: on_success
+          - ./php/7.1/fpm-debug/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 # Latest Phalcon
 build:phalcon:latest:
@@ -242,8 +227,8 @@ build:phalcon:latest:
         - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./phalcon/latest/*
-            when: on_success
+          - ./phalcon/latest/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -257,8 +242,8 @@ test:phalcon:latest:
         - php -m | grep phalcon
     rules:
         - changes:
-            - ./phalcon/latest/*
-            when: on_success
+          - ./phalcon/latest/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -275,16 +260,13 @@ release:phalcon:latest:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon:$PHALCON_TAG
         - docker push $CI_REGISTRY_IMAGE/phalcon:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./phalcon/latest/*
-            when: on_success
+          - ./phalcon/latest/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:phalcon:latest:
     tags:
@@ -298,16 +280,13 @@ deploy:phalcon:latest:
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon:$PHALCON_TAG
         - docker push twistersfury/phalcon:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./phalcon/latest/*
-            when: on_success
+          - ./phalcon/latest/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 # Latest Phalcon
 build:phalcon:phpstan:
@@ -320,8 +299,8 @@ build:phalcon:phpstan:
         - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
     rules:
         - changes:
-            - ./phalcon/tools/PHPStan/*
-            when: on_success
+          - ./phalcon/tools/PHPStan/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -339,8 +318,8 @@ test:phalcon:phpstan:
         - which phpstan
     rules:
         - changes:
-            - ./phalcon/tools/PHPStan/*
-            when: on_success
+          - ./phalcon/tools/PHPStan/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -354,16 +333,13 @@ release:phalcon:phpstan:
         - docker tag $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan $CI_REGISTRY_IMAGE/phalcon:phpstan
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon:phpstan
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./phalcon/tools/PHPStan/*
-            when: on_success
+          - ./phalcon/tools/PHPStan/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:phalcon:phpstan:
     tags:
@@ -374,16 +350,13 @@ deploy:phalcon:phpstan:
         - docker tag $CI_REGISTRY_IMAGE/phalcon:phpstan twistersfury/phalcon:phpstan
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon:phpstan
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./phalcon/tools/PHPStan/*
-            when: on_success
+          - ./phalcon/tools/PHPStan/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 #Docker
 build:docker:latest:
@@ -396,8 +369,8 @@ build:docker:latest:
         - docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./docker/*
-            when: on_success
+          - ./docker/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -412,8 +385,8 @@ test:docker:latest:
         - which docker-compose
     rules:
         - changes:
-            - ./docker/*
-            when: on_success
+          - ./docker/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -434,16 +407,13 @@ release:docker:latest:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/docker:latest
         - docker push $CI_REGISTRY_IMAGE/docker:$COMPOSE_VERSION
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./docker/*
-            when: on_success
+          - ./docker/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:docker:latest:
     tags:
@@ -461,16 +431,13 @@ deploy:docker:latest:
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/docker:latest
         - docker push twistersfury/docker:$COMPOSE_VERSION
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./docker/*
-            when: on_success
+          - ./docker/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 # Latest Cron
 build:cron:latest:
@@ -483,8 +450,8 @@ build:cron:latest:
         - docker push $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./cron/*
-            when: on_success
+          - ./cron/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -498,16 +465,13 @@ release:cron:latest:
         - docker tag $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/cron:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/cron:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./cron/*
-            when: on_success
+          - ./cron/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
         
 deploy:cron:latest:
     tags:
@@ -518,16 +482,13 @@ deploy:cron:latest:
         - docker tag $CI_REGISTRY_IMAGE/cron:latest twistersfury/cron:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/cron:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./cron/*
-            when: on_success
+          - ./cron/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 
 #XDebug Phalcon
@@ -598,8 +559,8 @@ build:phalcon:dev-tools:
         - docker push $CI_REGISTRY_IMAGE/phalcon-devtools:$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./phalcon-devtools/*
-            when: on_success
+          - ./phalcon-devtools/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -613,8 +574,8 @@ test:phalcon:dev-tools:
         - phalcon | grep 'Phalcon DevTools'
     rules:
         - changes:
-            - ./phalcon-devtools/*
-            when: on_success
+          - ./phalcon-devtools/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -628,16 +589,13 @@ release:phalcon:dev-tools:
         - docker tag $CI_REGISTRY_IMAGE/phalcon-devtools:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/phalcon-devtools
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/phalcon-devtools
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./phalcon-devtools/*
-            when: on_success
+          - ./phalcon-devtools/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:phalcon:dev-tools:
     tags:
@@ -648,16 +606,13 @@ deploy:phalcon:dev-tools:
         - docker tag $CI_REGISTRY_IMAGE/phalcon-devtools twistersfury/phalcon-devtools
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/phalcon-devtools
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./phalcon-devtools/*
-            when: on_success
+          - ./phalcon-devtools/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 
 
@@ -672,8 +627,8 @@ build:zephir:phalcon:
         - docker push $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME
     rules:
         - changes:
-            - ./zephir/phalcon/*
-            when: on_success
+          - ./zephir/phalcon/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -687,8 +642,8 @@ test:zephir:phalcon:
         - php -m | grep Zephir
     rules:
         - changes:
-            - ./zephir/phalcon/*
-            when: on_success
+          - ./zephir/phalcon/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
         - when: manual
@@ -705,16 +660,13 @@ release:zephir:phalcon:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/zephir:phalcon
         - docker push $CI_REGISTRY_IMAGE/zephir:phalcon-$PHALCON_TAG
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./zephir/phalcon/*
-            when: on_success
+          - ./zephir/phalcon/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 deploy:zephir:phalcon:
     tags:
@@ -728,13 +680,10 @@ deploy:zephir:phalcon:
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/zephir:phalcon
         - docker push twistersfury/zephir:phalcon-$PHALCON_TAG
-    only:
-        refs:
-            - master
     rules:
         - changes:
-            - ./zephir/phalcon/*
-            when: on_success
+          - ./zephir/phalcon/*
+          when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
