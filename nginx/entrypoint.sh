@@ -2,11 +2,6 @@
 
 ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST:$ENV_APPLICATION_ENV';
 
-# Updating Lets Encrypt
-#if [ ! -z "ENV_LETS_ENCRYPT" ]; then
-#
-#fi
-
 # Allow Ability To Disable HTTPS Files (Only Load HTTP)
 if [ -n "ENV_LETS_ENCRYPT" ]; then
     envsubst "$ENV_VARS" \
