@@ -19,7 +19,7 @@ PHP-CS-Fixer (Build):
     stage: build
     rules:
         - changes:
-          - ./php-cs-fixer/*
+          - php-cs-fixer/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -36,7 +36,7 @@ PHP-CS-Fixer (Test):
     image: $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./php-cs-fixer/*
+          - php-cs-fixer/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -55,7 +55,7 @@ PHP-CS-Fixer (Release):
         - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:latest
     rules:
         - changes:
-          - ./php-cs-fixer/*
+          - php-cs-fixer/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -72,7 +72,7 @@ PHP-CS-Fixer (Deploy):
         - docker push twistersfury/php-cs-fixer:latest
     rules:
         - changes:
-          - ./php-cs-fixer/*
+          - php-cs-fixer/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -89,7 +89,7 @@ build:nginx:
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./nginx/*
+          - nginx/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -110,7 +110,7 @@ build:nginx:
         - wget -qO - http://nginx.test/.well-known/ci.log
     rules:
         - changes:
-          - ./nginx/*
+          - nginx/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -127,7 +127,7 @@ release:nginx:
         - docker push $CI_REGISTRY_IMAGE/nginx:latest
     rules:
         - changes:
-          - ./nginx/*
+          - nginx/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -144,7 +144,7 @@ deploy:nginx:
         - docker push twistersfury/nginx:latest
     rules:
         - changes:
-          - ./nginx/*
+          - nginx/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -161,7 +161,7 @@ build:php:fpm-7.1-debug:
         - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./php/7.1/fpm-debug/*
+          - php/7.1/fpm-debug/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -176,7 +176,7 @@ test:php:fpm-7.1-debug:
         - php -i | grep "enable-debug"
     rules:
         - changes:
-          - ./php/7.1/fpm-debug/*
+          - php/7.1/fpm-debug
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -193,7 +193,7 @@ release:php:fpm-7.1-debug:
         - docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
     rules:
         - changes:
-          - ./php/7.1/fpm-debug/*
+          - php/7.1/fpm-debug/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -210,7 +210,7 @@ deploy:php:fpm-7.1-debug:
         - docker push twistersfury/php:fpm-7.1-debug
     rules:
         - changes:
-          - ./php/7.1/fpm-debug/*
+          - php/7.1/fpm-debug
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -227,7 +227,7 @@ build:phalcon:latest:
         - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./phalcon/latest/*
+          - phalcon/latest/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -242,7 +242,7 @@ test:phalcon:latest:
         - php -m | grep phalcon
     rules:
         - changes:
-          - ./phalcon/latest/*
+          - phalcon/latest/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -262,7 +262,7 @@ release:phalcon:latest:
         - docker push $CI_REGISTRY_IMAGE/phalcon:latest
     rules:
         - changes:
-          - ./phalcon/latest/*
+          - phalcon/latest/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -282,7 +282,7 @@ deploy:phalcon:latest:
         - docker push twistersfury/phalcon:latest
     rules:
         - changes:
-          - ./phalcon/latest/*
+          - phalcon/latest/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -299,7 +299,7 @@ build:phalcon:phpstan:
         - docker push $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
     rules:
         - changes:
-          - ./phalcon/tools/PHPStan/*
+          - phalcon/tools/PHPStan/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -318,7 +318,7 @@ test:phalcon:phpstan:
         - which phpstan
     rules:
         - changes:
-          - ./phalcon/tools/PHPStan/*
+          - phalcon/tools/PHPStan/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -335,7 +335,7 @@ release:phalcon:phpstan:
         - docker push $CI_REGISTRY_IMAGE/phalcon:phpstan
     rules:
         - changes:
-          - ./phalcon/tools/PHPStan/*
+          - phalcon/tools/PHPStan/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -352,7 +352,7 @@ deploy:phalcon:phpstan:
         - docker push twistersfury/phalcon:phpstan
     rules:
         - changes:
-          - ./phalcon/tools/PHPStan/*
+          - phalcon/tools/PHPStan/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -369,7 +369,7 @@ build:docker:latest:
         - docker push $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./docker/*
+          - docker/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -385,7 +385,7 @@ test:docker:latest:
         - which docker-compose
     rules:
         - changes:
-          - ./docker/*
+          - docker/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -409,7 +409,7 @@ release:docker:latest:
         - docker push $CI_REGISTRY_IMAGE/docker:$COMPOSE_VERSION
     rules:
         - changes:
-          - ./docker/*
+          - docker/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -433,7 +433,7 @@ deploy:docker:latest:
         - docker push twistersfury/docker:$COMPOSE_VERSION
     rules:
         - changes:
-          - ./docker/*
+          - docker/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -450,7 +450,7 @@ build:cron:latest:
         - docker push $CI_REGISTRY_IMAGE/cron:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./cron/*
+          - cron/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -467,7 +467,7 @@ release:cron:latest:
         - docker push $CI_REGISTRY_IMAGE/cron:latest
     rules:
         - changes:
-          - ./cron/*
+          - cron/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -484,7 +484,7 @@ deploy:cron:latest:
         - docker push twistersfury/cron:latest
     rules:
         - changes:
-          - ./cron/*
+          - cron/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -559,7 +559,7 @@ build:phalcon:dev-tools:
         - docker push $CI_REGISTRY_IMAGE/phalcon-devtools:$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./phalcon-devtools/*
+          - phalcon-devtools/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -574,7 +574,7 @@ test:phalcon:dev-tools:
         - phalcon | grep 'Phalcon DevTools'
     rules:
         - changes:
-          - ./phalcon-devtools/*
+          - phalcon-devtools/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -591,7 +591,7 @@ release:phalcon:dev-tools:
         - docker push $CI_REGISTRY_IMAGE/phalcon-devtools
     rules:
         - changes:
-          - ./phalcon-devtools/*
+          - phalcon-devtools/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -608,7 +608,7 @@ deploy:phalcon:dev-tools:
         - docker push twistersfury/phalcon-devtools
     rules:
         - changes:
-          - ./phalcon-devtools/*
+          - phalcon-devtools/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -627,7 +627,7 @@ build:zephir:phalcon:
         - docker push $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME
     rules:
         - changes:
-          - ./zephir/phalcon/*
+          - zephir/phalcon/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -642,7 +642,7 @@ test:zephir:phalcon:
         - php -m | grep Zephir
     rules:
         - changes:
-          - ./zephir/phalcon/*
+          - zephir/phalcon/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -662,7 +662,7 @@ release:zephir:phalcon:
         - docker push $CI_REGISTRY_IMAGE/zephir:phalcon-$PHALCON_TAG
     rules:
         - changes:
-          - ./zephir/phalcon/*
+          - zephir/phalcon/**
           when: always
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
@@ -682,7 +682,7 @@ deploy:zephir:phalcon:
         - docker push twistersfury/zephir:phalcon-$PHALCON_TAG
     rules:
         - changes:
-          - ./zephir/phalcon/*
+          - zephir/phalcon/**
           when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
