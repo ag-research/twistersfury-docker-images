@@ -3,6 +3,10 @@ image: docker:git
 services:
   - docker:dind
 
+tags:
+    - docker
+    - dind
+
 stages:
     - build
     - test
@@ -14,8 +18,6 @@ stages:
     - secondary-deploy
 
 PHP-CS-Fixer (Build):
-    tags:
-        - docker
     stage: build
     only:
         changes:
@@ -48,7 +50,6 @@ PHP-CS-Fixer (Release):
             - php-cs-fixer/*
 
 PHP-CS-Fixer (Deploy):
-    tags: ["docker"]
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:latest
@@ -63,7 +64,6 @@ PHP-CS-Fixer (Deploy):
 
 #Nginx w/SSL
 build:nginx:
-    tags: ["docker"]
     stage: build
     script:
 #        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
@@ -85,7 +85,6 @@ build:nginx:
         - wget -qO - http://nginx.test/.well-known/ci.log
 
 release:nginx:
-    tags: ["docker"]
     stage: release
     script:
 #        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
@@ -98,7 +97,6 @@ release:nginx:
         - master
 
 deploy:nginx:
-    tags: ["docker"]
     stage: deploy
     script:
 #        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
@@ -112,7 +110,6 @@ deploy:nginx:
 
 #PHP Debug
 build:php:fpm-7.1-debug:
-    tags: ["docker"]
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -129,7 +126,6 @@ test:php:fpm-7.1-debug:
         - php -i | grep "enable-debug"
 
 release:php:fpm-7.1-debug:
-    tags: ["docker"]
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -143,7 +139,6 @@ release:php:fpm-7.1-debug:
         - master
 
 deploy:php:fpm-7.1-debug:
-    tags: ["docker"]
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -158,7 +153,6 @@ deploy:php:fpm-7.1-debug:
 
 # Latest Phalcon
 build:phalcon:latest:
-    tags: ["docker"]
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -175,7 +169,6 @@ test:phalcon:latest:
         - php -m | grep phalcon
 
 release:phalcon:latest:
-    tags: ["docker"]
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -192,7 +185,6 @@ release:phalcon:latest:
         - master
 
 deploy:phalcon:latest:
-    tags: ["docker"]
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -210,7 +202,6 @@ deploy:phalcon:latest:
 
 # Latest Phalcon
 build:phalcon:phpstan:
-    tags: ["docker"]
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -230,7 +221,6 @@ test:phalcon:phpstan:
         - which phpstan
 
 release:phalcon:phpstan:
-    tags: ["docker"]
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -244,7 +234,6 @@ release:phalcon:phpstan:
         - master
 
 deploy:phalcon:phpstan:
-    tags: ["docker"]
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -259,7 +248,6 @@ deploy:phalcon:phpstan:
 
 #Docker
 build:docker:latest:
-    tags: ["docker"]
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -277,7 +265,6 @@ test:docker:latest:
         - which docker-compose
 
 release:docker:latest:
-    tags: ["docker"]
     stage: release
     before_script:
         - apk --no-cache add curl
@@ -296,7 +283,6 @@ release:docker:latest:
         - master
 
 deploy:docker:latest:
-    tags: ["docker"]
     stage: deploy
     before_script:
         - apk --no-cache add curl
@@ -316,7 +302,6 @@ deploy:docker:latest:
 
 # Latest Cron
 build:cron:latest:
-    tags: ["docker"]
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -327,7 +312,6 @@ build:cron:latest:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 release:cron:latest:
-    tags: ["docker"]
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -341,7 +325,6 @@ release:cron:latest:
         - master
 
 deploy:cron:latest:
-    tags: ["docker"]
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -357,7 +340,6 @@ deploy:cron:latest:
 
 #XDebug Phalcon
 .build:phalcon:xdebug:
-    tags: ["docker"]
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -374,7 +356,6 @@ deploy:cron:latest:
         - php -m | grep xdebug
 
 .release:phalcon:xdebug:
-    tags: ["docker"]
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -391,7 +372,6 @@ deploy:cron:latest:
         - master
 
 .deploy:phalcon:xdebug:
-    tags: ["docker"]
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -409,7 +389,6 @@ deploy:cron:latest:
         
 #XDebug Phalcon
 build:phalcon:dev-tools:
-    tags: ["docker"]
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -426,7 +405,6 @@ test:phalcon:dev-tools:
         - phalcon | grep 'Phalcon DevTools'
 
 release:phalcon:dev-tools:
-    tags: ["docker"]
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -440,7 +418,6 @@ release:phalcon:dev-tools:
         - master
 
 deploy:phalcon:dev-tools:
-    tags: ["docker"]
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -457,7 +434,6 @@ deploy:phalcon:dev-tools:
 
 #PHP Debug
 build:zephir:phalcon:
-    tags: ["docker"]
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -474,7 +450,6 @@ test:zephir:phalcon:
         - php -m | grep Zephir
 
 release:zephir:phalcon:
-    tags: ["docker"]
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -491,7 +466,6 @@ release:zephir:phalcon:
         - master
 
 deploy:zephir:phalcon:
-    tags: ["docker"]
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
