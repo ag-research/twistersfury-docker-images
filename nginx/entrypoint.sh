@@ -2,11 +2,12 @@
 
 ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST:$ENV_APPLICATION_ENV';
 
-# Allow Ability To Disable HTTPS Files (Only Load HTTP)
+# Setup For Lets Encrypt
 if [ -n "ENV_LETS_ENCRYPT" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-renew.template \
         > /etc/nginx/conf.d/letsencrypt-renew.conf
+# Allow Ability To Disable HTTPS Files (Only Load HTTP)
 elif [ -z "$ENV_IGNORE_HTTPS" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-https.template \
