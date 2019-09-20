@@ -53,16 +53,13 @@ PHP-CS-Fixer (Release):
         - docker tag $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php-cs-fixer:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:latest
-    only:
-        refs:
-            - master
     rules:
         - changes:
             - ./php-cs-fixer/*
             when: on_success
         - if: '$ENV_FORCE_BUILD == "1"'
           when: on_success
-        - when: manual
+        - if: '$CI_COMMIT_REF_NAME == "master"'
 
 PHP-CS-Fixer (Deploy):
     tags:
