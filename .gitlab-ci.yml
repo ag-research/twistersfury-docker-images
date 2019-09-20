@@ -16,11 +16,12 @@ stages:
 PHP-CS-Fixer (Build):
     tags:
         - docker
-        - dind
     stage: build
     only:
         changes:
             - php-cs-fixer/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
     script:
         - docker build --pull -t $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME ./php-cs-fixer
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
@@ -29,19 +30,19 @@ PHP-CS-Fixer (Build):
 PHP-CS-Fixer (Test):
     tags:
         - docker
-        - dind
     stage: test
     image: $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
     only:
         changes:
             - php-cs-fixer/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
     script:
         - php-cs-fixer --help
 
 PHP-CS-Fixer (Release):
     tags:
         - docker
-        - dind
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
@@ -53,11 +54,12 @@ PHP-CS-Fixer (Release):
             - master
         changes:
             - php-cs-fixer/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 PHP-CS-Fixer (Deploy):
     tags:
         - docker
-        - dind
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:latest
@@ -69,24 +71,27 @@ PHP-CS-Fixer (Deploy):
             - master
         changes:
             - php-cs-fixer/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 #Nginx w/SSL
 build:nginx:
     tags:
         - docker
-        - dind
     stage: build
     script:
-#        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
-#        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
+    only:
+        changes:
+            - nginx/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 .test:nginx:
     tags:
         - docker
-        - dind
     stage: test
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     services:
@@ -97,30 +102,34 @@ build:nginx:
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
     script:
         - wget -qO - http://nginx.test/.well-known/ci.log
+    only:
+        changes:
+            - nginx/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 release:nginx:
     tags:
         - docker
-        - dind
     stage: release
     script:
-#        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
-#        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:latest
     only:
-        - master
+        refs:
+            - master
+        changes:
+            - nginx/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 deploy:nginx:
     tags:
         - docker
-        - dind
     stage: deploy
     script:
-#        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
-#        - dockerize || (echo "no need to build new docker image" && exit 0)
         - docker pull $CI_REGISTRY_IMAGE/nginx:latest
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
@@ -134,12 +143,14 @@ build:php:fpm-7.1-debug:
         - docker
     stage: build
     script:
-        - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
-        - alias 'dockerize=git whatchanged HEAD^! | grep php/7.1/fpm-debug/Dockerfile > /dev/null'
-        - (normalRun || dockerize) && docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
-        - (normalRun || dockerize) && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - (normalRun || dockerize) && docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
-        - dockerize || (echo "no need to build new docker image" && exit 0)
+        - docker build -t $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME ./php/7.1/fpm-debug
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+    only:
+        changes:
+            - php/7.1/fpm-debug/*
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 test:php:fpm-7.1-debug:
     tags:
@@ -148,19 +159,21 @@ test:php:fpm-7.1-debug:
     stage: test
     script:
         - php -i | grep "enable-debug"
+    only:
+        changes:
+            - php/7.1/fpm-debug
+        variables:
+            - $ENV_FORCE_BUILD == "1"
 
 release:php:fpm-7.1-debug:
     tags:
         - docker
     stage: release
     script:
-        - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
-        - alias 'dockerize=git whatchanged HEAD^! | grep php/7.1/fpm-debug/Dockerfile > /dev/null'
-        - (normalRun || dockerize) && docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
-        - (normalRun || dockerize) && docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
-        - (normalRun || dockerize) && echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-        - (normalRun || dockerize) && docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
-        - dockerize || (echo "no need to build new docker image" && exit 0)
+        - docker pull $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/php:fpm-7.1-debug
     only:
         - master
 
