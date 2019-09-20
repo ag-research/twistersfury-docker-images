@@ -12,7 +12,7 @@ if [ -n "ENV_LETS_ENCRYPT" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-http.template \
         > /etc/nginx/conf.d/letsencrypt-renew.conf
-else if [ -z "$ENV_IGNORE_HTTPS" ]; then
+elif [ -z "$ENV_IGNORE_HTTPS" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-https.template \
         > /etc/nginx/conf.d/letsencrypt-https.conf
