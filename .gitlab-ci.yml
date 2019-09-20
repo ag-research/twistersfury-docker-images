@@ -3,10 +3,6 @@ image: docker:git
 services:
   - docker:dind
 
-tags:
-    - docker
-    - dind
-
 stages:
     - build
     - test
@@ -18,6 +14,9 @@ stages:
     - secondary-deploy
 
 PHP-CS-Fixer (Build):
+    tags:
+        - docker
+        - dind
     stage: build
     only:
         changes:
@@ -28,6 +27,9 @@ PHP-CS-Fixer (Build):
         - docker push $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
 
 PHP-CS-Fixer (Test):
+    tags:
+        - docker
+        - dind
     stage: test
     image: $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
     only:
@@ -37,6 +39,9 @@ PHP-CS-Fixer (Test):
         - php-cs-fixer --help
 
 PHP-CS-Fixer (Release):
+    tags:
+        - docker
+        - dind
     stage: release
     script:
         - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:$CI_BUILD_REF_NAME
@@ -50,6 +55,9 @@ PHP-CS-Fixer (Release):
             - php-cs-fixer/*
 
 PHP-CS-Fixer (Deploy):
+    tags:
+        - docker
+        - dind
     stage: deploy
     script:
         - docker pull $CI_REGISTRY_IMAGE/php-cs-fixer:latest
@@ -64,6 +72,9 @@ PHP-CS-Fixer (Deploy):
 
 #Nginx w/SSL
 build:nginx:
+    tags:
+        - docker
+        - dind
     stage: build
     script:
 #        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
@@ -73,6 +84,9 @@ build:nginx:
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
 
 .test:nginx:
+    tags:
+        - docker
+        - dind
     stage: test
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     services:
@@ -85,6 +99,9 @@ build:nginx:
         - wget -qO - http://nginx.test/.well-known/ci.log
 
 release:nginx:
+    tags:
+        - docker
+        - dind
     stage: release
     script:
 #        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
@@ -97,6 +114,9 @@ release:nginx:
         - master
 
 deploy:nginx:
+    tags:
+        - docker
+        - dind
     stage: deploy
     script:
 #        - alias 'dockerize=git whatchanged HEAD^! | grep nginx/Dockerfile > /dev/null'
@@ -110,6 +130,9 @@ deploy:nginx:
 
 #PHP Debug
 build:php:fpm-7.1-debug:
+    tags:
+        - docker
+        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -120,12 +143,18 @@ build:php:fpm-7.1-debug:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:php:fpm-7.1-debug:
+    tags:
+        - docker
+        - dind
     image: $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
     stage: test
     script:
         - php -i | grep "enable-debug"
 
 release:php:fpm-7.1-debug:
+    tags:
+        - docker
+        - dind
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -139,6 +168,9 @@ release:php:fpm-7.1-debug:
         - master
 
 deploy:php:fpm-7.1-debug:
+    tags:
+        - docker
+        - dind
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -153,6 +185,9 @@ deploy:php:fpm-7.1-debug:
 
 # Latest Phalcon
 build:phalcon:latest:
+    tags:
+        - docker
+        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -163,12 +198,18 @@ build:phalcon:latest:
         - (normalRun || dockerize) || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:latest:
+    tags:
+        - docker
+        - dind
     image: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME
     stage: test
     script:
         - php -m | grep phalcon
 
 release:phalcon:latest:
+    tags:
+        - docker
+        - dind
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -185,6 +226,9 @@ release:phalcon:latest:
         - master
 
 deploy:phalcon:latest:
+    tags:
+        - docker
+        - dind
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -202,6 +246,9 @@ deploy:phalcon:latest:
 
 # Latest Phalcon
 build:phalcon:phpstan:
+    tags:
+        - docker
+        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -212,6 +259,9 @@ build:phalcon:phpstan:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:phpstan:
+    tags:
+        - docker
+        - dind
     image:
         name: $CI_REGISTRY_IMAGE/phalcon:$CI_BUILD_REF_NAME-phpstan
         entrypoint: [""]
@@ -221,6 +271,9 @@ test:phalcon:phpstan:
         - which phpstan
 
 release:phalcon:phpstan:
+    tags:
+        - docker
+        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -234,6 +287,9 @@ release:phalcon:phpstan:
         - master
 
 deploy:phalcon:phpstan:
+    tags:
+        - docker
+        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -248,6 +304,9 @@ deploy:phalcon:phpstan:
 
 #Docker
 build:docker:latest:
+    tags:
+        - docker
+        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -258,6 +317,9 @@ build:docker:latest:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:docker:latest:
+    tags:
+        - docker
+        - dind
     image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
     stage: test
     script:
@@ -265,6 +327,9 @@ test:docker:latest:
         - which docker-compose
 
 release:docker:latest:
+    tags:
+        - docker
+        - dind
     stage: release
     before_script:
         - apk --no-cache add curl
@@ -283,6 +348,9 @@ release:docker:latest:
         - master
 
 deploy:docker:latest:
+    tags:
+        - docker
+        - dind
     stage: deploy
     before_script:
         - apk --no-cache add curl
@@ -302,6 +370,9 @@ deploy:docker:latest:
 
 # Latest Cron
 build:cron:latest:
+    tags:
+        - docker
+        - dind
     stage: build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -312,6 +383,9 @@ build:cron:latest:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 release:cron:latest:
+    tags:
+        - docker
+        - dind
     stage: release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -325,6 +399,9 @@ release:cron:latest:
         - master
 
 deploy:cron:latest:
+    tags:
+        - docker
+        - dind
     stage: deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -340,6 +417,9 @@ deploy:cron:latest:
 
 #XDebug Phalcon
 .build:phalcon:xdebug:
+    tags:
+        - docker
+        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -350,12 +430,18 @@ deploy:cron:latest:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 .test:phalcon:xdebug:
+    tags:
+        - docker
+        - dind
     image: $CI_REGISTRY_IMAGE/phalcon-xdebug:$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
         - php -m | grep xdebug
 
 .release:phalcon:xdebug:
+    tags:
+        - docker
+        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -372,6 +458,9 @@ deploy:cron:latest:
         - master
 
 .deploy:phalcon:xdebug:
+    tags:
+        - docker
+        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -389,6 +478,9 @@ deploy:cron:latest:
         
 #XDebug Phalcon
 build:phalcon:dev-tools:
+    tags:
+        - docker
+        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -399,12 +491,18 @@ build:phalcon:dev-tools:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:phalcon:dev-tools:
+    tags:
+        - docker
+        - dind
     image: $CI_REGISTRY_IMAGE/phalcon-devtools:$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
         - phalcon | grep 'Phalcon DevTools'
 
 release:phalcon:dev-tools:
+    tags:
+        - docker
+        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -418,6 +516,9 @@ release:phalcon:dev-tools:
         - master
 
 deploy:phalcon:dev-tools:
+    tags:
+        - docker
+        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -434,6 +535,9 @@ deploy:phalcon:dev-tools:
 
 #PHP Debug
 build:zephir:phalcon:
+    tags:
+        - docker
+        - dind
     stage: secondary-build
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -444,12 +548,18 @@ build:zephir:phalcon:
         - dockerize || (echo "no need to build new docker image" && exit 0)
 
 test:zephir:phalcon:
+    tags:
+        - docker
+        - dind
     image: $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME
     stage: secondary-test
     script:
         - php -m | grep Zephir
 
 release:zephir:phalcon:
+    tags:
+        - docker
+        - dind
     stage: secondary-release
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
@@ -466,6 +576,9 @@ release:zephir:phalcon:
         - master
 
 deploy:zephir:phalcon:
+    tags:
+        - docker
+        - dind
     stage: secondary-deploy
     script:
         - alias 'normalRun=[ ! -z "$ENV_FORCE_BUILD" ]'
