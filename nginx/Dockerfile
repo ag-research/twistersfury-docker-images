@@ -9,7 +9,7 @@ RUN mkdir -p /data/letsencrypt && \
     mkdir -p /etc/letsencrypt/live/
 
 # For Testing
-RUN echo "OKAY" > /data/letsencrypt/ci.log
+RUN echo "OKAY" > /data/letsencrypt/.well-known/ci.log
 
 # Copy Base Templates
 COPY ./entrypoint.sh /mnt/entrypoint.sh
