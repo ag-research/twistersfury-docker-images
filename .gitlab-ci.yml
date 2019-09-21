@@ -2,9 +2,6 @@ image: docker:git
 
 services:
   - docker:dind
-  
-variables:
-  ENV_LETS_ENCRYPT: 1
 
 stages:
     - build
@@ -94,15 +91,16 @@ test:nginx:
     tags:
         - docker
     stage: test
-    image: $CI_REGISTRY_IMAGE/docker:$CI_BUILD_REF_NAME
-    services:
-        - name: $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
-          alias: nginx.test
     variables:
         ENV_DOMAIN_NAME: nginx.test
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
+        ENV_LETS_ENCRYPT: 1
+    before_script:
+        - docker run --rm -p 80:80/tcp -name nginx -d -e ENV_DOMAIN_NAME -e ENV_UPSTREAM_HOST -e ENV_LETS_ENCRYPT $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
     script:
-        - wget -qO - http://nginx.test/.well-known/ci.log
+        - wget -qO - http://127.0.0.1/.well-known/ci.log
+    after_script:
+        - docker stop nginx
     except:
       - scheduled
     only:
