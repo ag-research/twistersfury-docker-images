@@ -96,9 +96,9 @@ test:nginx:
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
         ENV_LETS_ENCRYPT: 1
     before_script:
-        - docker run --rm -p 8080:80/tcp --name nginx -d -e ENV_DOMAIN_NAME -e ENV_UPSTREAM_HOST -e ENV_LETS_ENCRYPT $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
+        - docker run --rm --name nginx -d -e ENV_DOMAIN_NAME -e ENV_UPSTREAM_HOST -e ENV_LETS_ENCRYPT $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
     script:
-        - wget -qO - http://127.0.0.1:8080/.well-known/ci.log
+        - docker run --link nginx testing --rm docker:git wget -qO - http://nginx/.well-known/ci.log
     after_script:
         - docker stop nginx
     except:
