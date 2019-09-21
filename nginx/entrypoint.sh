@@ -1,4 +1,4 @@
-c#!/bin/sh
+#!/bin/sh
 
 ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST:$ENV_APPLICATION_ENV';
 
