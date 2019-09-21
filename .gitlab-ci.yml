@@ -98,7 +98,7 @@ test:nginx:
     before_script:
         - docker run --rm --name nginx -d -e ENV_DOMAIN_NAME -e ENV_UPSTREAM_HOST -e ENV_LETS_ENCRYPT $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
     script:
-        - docker run --link nginx testing --rm docker:git wget -qO - http://nginx/.well-known/ci.log
+        - docker run --link nginx --rm docker:git wget -qO - http://nginx/.well-known/ci.log
     after_script:
         - docker stop nginx
     except:
