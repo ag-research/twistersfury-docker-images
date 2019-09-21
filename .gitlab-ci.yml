@@ -87,11 +87,11 @@ build:nginx:
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
+    except:
+      - scheduled
     only:
-        except:
-            - scheduled
-        variables:
-            $ENV_FORCE_BUILD
+      variables:
+        $ENV_FORCE_BUILD
 
 .test:nginx:
     tags:
