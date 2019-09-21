@@ -5,7 +5,7 @@ ENTRYPOINT ["/mnt/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 
 # Create Base Files
-RUN mkdir -p /data/letsencrypt && \
+RUN mkdir -p /data/letsencrypt/.well-known && \
     mkdir -p /etc/letsencrypt/live/
 
 # For Testing
