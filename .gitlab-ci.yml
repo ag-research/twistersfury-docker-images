@@ -91,7 +91,7 @@ build:nginx:
       - scheduled
     only:
       variables:
-        $ENV_FORCE_BUILD
+        - "$ENV_FORCE_BUILD"
 
 .test:nginx:
     tags:
@@ -106,13 +106,13 @@ build:nginx:
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
     script:
         - wget -qO - http://nginx.test/.well-known/ci.log
-    rules:
-        - changes:
-          - nginx/**
-          when: always
-        - if: '$ENV_FORCE_BUILD == "1"'
-          when: on_success
-        - when: manual
+    except:
+      - scheduled
+    only:
+      refs:
+        - master
+      variables:
+        - "$ENV_FORCE_BUILD"
 
 release:nginx:
     tags:
@@ -124,9 +124,12 @@ release:nginx:
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:latest
     except:
-        - scheduled
-    variables:
-        - $ENV_FORCE_BUILD
+      - scheduled
+    only:
+      refs:
+        - master
+      variables:
+        - "$ENV_FORCE_BUILD"
 
 
 deploy:nginx:
@@ -139,9 +142,12 @@ deploy:nginx:
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/nginx:latest
     except:
-        - scheduled
-    variables:
-        - $ENV_FORCE_BUILD
+      - scheduled
+    only:
+      refs:
+        - master
+      variables:
+        - "$ENV_FORCE_BUILD"
 
 
 #PHP Debug
