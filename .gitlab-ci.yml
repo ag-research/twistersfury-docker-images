@@ -100,6 +100,7 @@ test:nginx:
     script:
         - docker run --link nginx --rm docker:git wget -qO - http://nginx/.well-known/ci.log
     after_script:
+        - docker logs nginx
         - docker stop nginx
     except:
       - scheduled
