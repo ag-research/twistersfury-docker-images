@@ -9,6 +9,7 @@ RUN mkdir -p /data/letsencrypt && \
 
 RUN echo "OKAY" > /data/letsencrypt/ci.log
 
+# Copy Base Templates
 COPY ./entrypoint.sh /mnt/entrypoint.sh
 COPY ./letsencrypt-http.conf /mnt/letsencrypt-http.template
 COPY ./letsencrypt-https.conf /mnt/letsencrypt-https.template
