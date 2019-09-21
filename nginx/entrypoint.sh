@@ -1,9 +1,9 @@
-#!/bin/sh
+c#!/bin/sh
 
 ENV_VARS='$ENV_DOMAIN_NAME:$ENV_UPSTREAM_HOST:$ENV_APPLICATION_ENV';
 
 # Setup For Lets Encrypt
-if [ -n "ENV_LETS_ENCRYPT" ]; then
+if [ -n "$ENV_LETS_ENCRYPT" ]; then
     echo "Running In Lets Encrypt Mode"
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-renew.template \
