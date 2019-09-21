@@ -22,7 +22,7 @@ else
         > /etc/nginx/conf.d/letsencrypt-http.conf
 fi
 
-if [ -z "ENV_LETS_ENCRYPT" ]; then
+if [ -z "$ENV_LETS_ENCRYPT" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/upstream.template \
         > /etc/nginx/conf.d/upstream.conf
