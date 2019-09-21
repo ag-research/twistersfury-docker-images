@@ -12,6 +12,7 @@ elif [ -z "$ENV_IGNORE_HTTPS" ]; then
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-https.template \
         > /etc/nginx/conf.d/letsencrypt-https.conf
+# HTTP Only
 else
     envsubst "$ENV_VARS" \
         < /mnt/letsencrypt-http.template \
