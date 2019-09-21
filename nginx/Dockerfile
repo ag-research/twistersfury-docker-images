@@ -8,6 +8,7 @@ CMD ["nginx", "-g", "daemon off;"]
 RUN mkdir -p /data/letsencrypt && \
     mkdir -p /etc/letsencrypt/live/
 
+# For Testing
 RUN echo "OKAY" > /data/letsencrypt/ci.log
 
 # Copy Base Templates
