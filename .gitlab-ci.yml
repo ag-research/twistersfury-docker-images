@@ -2,6 +2,9 @@ image: docker:git
 
 services:
   - docker:dind
+  
+variables:
+  ENV_LETS_ENCRYPT: 1
 
 stages:
     - build
@@ -98,7 +101,6 @@ test:nginx:
     variables:
         ENV_DOMAIN_NAME: nginx.test
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
-        ENV_LETS_ENCRYPT: 1
     script:
         - wget -qO - http://nginx.test/.well-known/ci.log
     except:
