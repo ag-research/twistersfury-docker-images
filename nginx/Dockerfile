@@ -20,4 +20,3 @@ COPY ./upstream.conf /mnt/upstream.template
 
 #Setting Permissions
 RUN chmod +x /mnt/entrypoint.sh
-
