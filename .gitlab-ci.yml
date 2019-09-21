@@ -87,13 +87,10 @@ build:nginx:
         - docker build -t $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME ./nginx
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME
-    rules:
-        - changes:
-          - nginx/**
-          when: always
-        - if: '$ENV_FORCE_BUILD == "1"'
-          when: on_success
-        - when: manual
+    except:
+        - scheduled
+    variables:
+        - $ENV_FORCE_BUILD
 
 .test:nginx:
     tags:
@@ -125,13 +122,11 @@ release:nginx:
         - docker tag $CI_REGISTRY_IMAGE/nginx:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/nginx:latest
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/nginx:latest
-    rules:
-        - changes:
-          - nginx/**
-          when: always
-        - if: '$ENV_FORCE_BUILD == "1"'
-          when: on_success
-        - if: '$CI_COMMIT_REF_NAME == "master"'
+    except:
+        - scheduled
+    variables:
+        - $ENV_FORCE_BUILD
+
 
 deploy:nginx:
     tags:
@@ -142,13 +137,11 @@ deploy:nginx:
         - docker tag $CI_REGISTRY_IMAGE/nginx:latest twistersfury/nginx:latest
         - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
         - docker push twistersfury/nginx:latest
-    rules:
-        - changes:
-          - nginx/**
-          when: always
-        - if: '$ENV_FORCE_BUILD == "1"'
-          when: on_success
-        - if: '$CI_COMMIT_REF_NAME == "master"'
+    except:
+        - scheduled
+    variables:
+        - $ENV_FORCE_BUILD
+
 
 #PHP Debug
 build:php:fpm-7.1-debug:
