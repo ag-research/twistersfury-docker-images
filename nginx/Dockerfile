@@ -4,6 +4,7 @@ EXPOSE 80 443
 ENTRYPOINT ["/mnt/entrypoint.sh"]
 CMD ["nginx", "-g", "daemon off;"]
 
+# Create Base Files
 RUN mkdir -p /data/letsencrypt && \
     mkdir -p /etc/letsencrypt/live/
 
