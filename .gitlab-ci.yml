@@ -92,7 +92,7 @@ test:nginx:
         - docker
     stage: test
     variables:
-        ENV_DOMAIN_NAME: nginx.test
+        ENV_DOMAIN_NAME: nginx
         ENV_UPSTREAM_HOST: 127.0.0.1:8000
         ENV_LETS_ENCRYPT: 1
     before_script:
