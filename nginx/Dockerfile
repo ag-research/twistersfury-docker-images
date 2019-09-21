@@ -18,4 +18,5 @@ COPY ./letsencrypt-https.conf /mnt/letsencrypt-https.template
 COPY ./letsencrypt-renew.conf /mnt/letsencrypt-renew.template
 COPY ./upstream.conf /mnt/upstream.template
 
+#Setting Permissions
 RUN chmod +x /mnt/entrypoint.sh
