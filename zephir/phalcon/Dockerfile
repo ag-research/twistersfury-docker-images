@@ -27,14 +27,38 @@ RUN apt-get update && apt-get install -y \
         git \
         sudo \
         file \
+        libmemcached-dev \
+        zlib1g-dev \
+        libmagickwand-dev \
+        libyaml-dev \
+        gdb \
+        --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pecl install \
         xdebug \
         redis \
+        memcached \
+        igbinary \
+        msgpack \
+        apcu \
+        imagick \
+        yaml \
+        pcov \
     && rm -rf /tmp/pear \
     # && echo "zend_extension=xdebug.so" >> 00-xdebug.ini \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable \
+        redis \
+        memcached \
+        igbinary \
+        msgpack \
+        apcu \
+        imagick \
+        yaml \
+        pcov \
+    && docker-php-ext-install \
+        gd \
+        gettext
 
 #Installing Zephir Parser
 RUN curl -fsSL https://github.com/phalcon/php-zephir-parser/archive/$ZEPHIR_PARSER.tar.gz | tar xz \
@@ -69,3 +93,6 @@ RUN curl -fsSL https://github.com/phalcon/cphalcon/archive/$PHALCON_BRANCH.tar.g
     && docker-php-ext-enable phalcon \
     && cd ../ \
     && mv cphalcon-$PHALCON_BRANCH /opt/cphalcon #Moving For Building
+
+RUN echo "apc.enable_cli=1" > /usr/local/etc/php/conf.d/00-apc.ini \
+    && echo "apc.enable=1" >> /usr/local/etc/php/conf.d/00-apc.ini
