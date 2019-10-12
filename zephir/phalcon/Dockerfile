@@ -32,6 +32,7 @@ RUN apt-get update && apt-get install -y \
         libmagickwand-dev \
         libyaml-dev \
         gdb \
+        lcov \
         --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
