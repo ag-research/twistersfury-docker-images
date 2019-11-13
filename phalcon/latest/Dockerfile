@@ -4,8 +4,10 @@ RUN apt-get update && apt-get install -y \
         curl \
     && rm -rf /var/lib/apt/lists/*
 
+ARG PHALCON_BRANCH=master
+
 #Configs For Versions
-ENV PHALCON_BRANCH master
+ENV PHALCON_BRANCH=${PHALCON_BRANCH}
 ENV PSR_BRANCH master
 
 #Installing PSR
