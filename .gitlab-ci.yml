@@ -595,8 +595,10 @@ build:zephir:phalcon:
     tags:
         - docker
     stage: secondary-build
+    variables:
+        PHALCON_BRANCH: master
     script:
-        - docker build -t $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME ./zephir/phalcon/
+        - docker build -t $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME --build-arg PHALCON_BRANCH=$PHALCON_BRANCH ./zephir/phalcon/
         - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
         - docker push $CI_REGISTRY_IMAGE/zephir:phalcon-$CI_BUILD_REF_NAME
     except:
