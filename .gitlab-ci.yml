@@ -145,7 +145,7 @@ deploy:nginx:
 
 
 #PHP Debug
-build:php:fpm-7.1-debug:
+.build:php:fpm-7.1-debug:
     tags:
         - docker
     stage: build
@@ -159,7 +159,7 @@ build:php:fpm-7.1-debug:
       changes:
         - php/7.1/fpm-debug/**
 
-test:php:fpm-7.1-debug:
+.test:php:fpm-7.1-debug:
     tags:
         - docker
     image: $CI_REGISTRY_IMAGE/php:$CI_BUILD_REF_NAME
@@ -172,7 +172,7 @@ test:php:fpm-7.1-debug:
       changes:
         - php/7.1/fpm-debug/**
 
-release:php:fpm-7.1-debug:
+.release:php:fpm-7.1-debug:
     tags:
         - docker
     stage: release
@@ -189,7 +189,7 @@ release:php:fpm-7.1-debug:
       changes:
         - php/7.1/fpm-debug/**
 
-deploy:php:fpm-7.1-debug:
+.deploy:php:fpm-7.1-debug:
     tags:
         - docker
     stage: deploy
