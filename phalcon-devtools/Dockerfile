@@ -23,7 +23,8 @@ RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql
 
 RUN curl -fsSL https://github.com/phalcon/phalcon-devtools/archive/$PHALCON_BRANCH.tar.gz | tar xz \
     && cd phalcon-devtools-$PHALCON_BRANCH \
-    && composer install --no-suggest --ignore-platform-reqs --no-interaction --no-scripts --prefer-dist \
-    && ln -s $(pwd)/phalcon /usr/local/bin/phalcon
+    && composer install --no-suggest --no-interaction --no-scripts --prefer-dist \ 
+    #--ignore-platform-reqs 
+    && ln -s $(pwd)/phalcon /usr/local/bin/phalcon 
 
 CMD ["/usr/local/bin/phalcon"]
