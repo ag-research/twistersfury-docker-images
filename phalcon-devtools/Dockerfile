@@ -14,7 +14,8 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN apt-get update && apt-get install -y \
         curl \
         git \
-        zlib-dev \
+        zlib1g-dev \
+        libzip-dev \
         --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
