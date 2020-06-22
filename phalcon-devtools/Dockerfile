@@ -14,17 +14,18 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN apt-get update && apt-get install -y \
         curl \
         git \
-        libzip-dev \
+        zlib1g-dev \
         --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql
+RUN docker-php-ext-install -j$(nproc) mysqli pdo pdo_mysql zip
 
 #Installing Phalcon
 
 RUN curl -fsSL https://github.com/phalcon/phalcon-devtools/archive/$PHALCON_BRANCH.tar.gz | tar xz \
     && cd phalcon-devtools-$PHALCON_BRANCH \
-    && composer install --no-suggest --ignore-platform-reqs --no-interaction --no-scripts --prefer-source \
+    && composer install --no-suggest --no-interaction --no-scripts --prefer-dist \
+    #--ignore-platform-reqs
     && ln -s $(pwd)/phalcon /usr/local/bin/phalcon
 
 CMD ["/usr/local/bin/phalcon"]
