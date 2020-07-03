@@ -659,3 +659,52 @@ deploy:zephir:phalcon:
         - master
       changes:
         - zephir/phalcon/**
+
+# Latest Cron
+Composer Build:
+    tags:
+        - docker
+    stage: secondary-build
+    script:
+        - docker build -t $CI_REGISTRY_IMAGE/composer:$CI_BUILD_REF_NAME ./composer
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/composer:$CI_BUILD_REF_NAME
+    except:
+        - scheduled
+    only:
+        changes:
+            - composer/**
+
+Composer Release:
+    tags:
+        - docker
+    stage: secondary-release
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/composer:$CI_BUILD_REF_NAME
+        - docker tag $CI_REGISTRY_IMAGE/composer:$CI_BUILD_REF_NAME $CI_REGISTRY_IMAGE/composer:latest
+        - echo "$CI_JOB_TOKEN" | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+        - docker push $CI_REGISTRY_IMAGE/composer:latest
+    except:
+        - scheduled
+    only:
+        refs:
+            - master
+        changes:
+            - composer/**
+
+Composer Deploy:
+    tags:
+        - docker
+    stage: secondary-deploy
+    script:
+        - docker pull $CI_REGISTRY_IMAGE/composer:latest
+        - docker tag $CI_REGISTRY_IMAGE/composer:latest twistersfury/composer:latest
+        - echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USER --password-stdin
+        - docker push twistersfury/composer:latest
+    except:
+        - scheduled
+    only:
+        refs:
+            - master
+        changes:
+            - composer/**
