@@ -59,9 +59,12 @@ RUN pecl install \
         imagick \
         yaml \
         pcov \
-    && docker-php-ext-install \
+    && docker-php-ext-install -j$(nproc) \
         gd \
-        gettext
+        gettext \
+        mysqli \
+        pdo \
+        pdo_mysql
 
 #Installing Zephir Parser
 RUN curl -fsSL https://github.com/phalcon/php-zephir-parser/archive/$ZEPHIR_PARSER.tar.gz | tar xz \
